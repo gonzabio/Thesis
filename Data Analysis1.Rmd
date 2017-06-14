@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-##Overview: 
+## Overview: 
 
 Below is the first part of an extended data analysis that was conducted using the IUCN Red List of endangered species. Amphibians were considered from all five red list categories: Near Threatened (NT) , Least Concern (LC), Vulnerable (VU), Endangered (EN) and Critically Endangered (CR). Data Deficient (DD), Extinct (EX) and Extinct in the Wild (EW) amphibians were excluded from this initial analysis. Habitat types and threat types were analyzed. 
 
