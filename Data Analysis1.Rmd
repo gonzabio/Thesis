@@ -1,0 +1,85 @@
+---
+title: "Data Analysis Part 1"
+author: "Alexandra Gonzalez"
+date: "June 1, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Overview: 
+
+Below is the first part of an extended data analysis that was conducted using the IUCN Red List of endangered species. Amphibians were considered from all five red list categories: Near Threatened (NT) , Least Concern (LC), Vulnerable (VU), Endangered (EN) and Critically Endangered (CR). Data Deficient (DD), Extinct (EX) and Extinct in the Wild (EW) amphibians were excluded from this initial analysis. Habitat types and threat types were analyzed. 
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggplot2)
+library(rredlist)
+library(RSQLite)
+library(sqldf)
+library(dplyr)
+
+cr_threat_table <- read.table(file = "cr_threat_table.txt", sep="\t")
+en_threat_table <- read.table(file = "en_threat_table.txt", sep="\t")
+vu_threat_table <- read.table(file = "vu_threat_table.txt", sep="\t")
+nt_threat_table <- read.table(file = "nt_threat_table.txt", sep="\t")
+lc_threat_table <- read.table(file = "lc_threat_table.txt", sep="\t")
+
+
+allthreats2 <- rbind(cr_threat_table, en_threat_table, vu_threat_table, nt_threat_table, lc_threat_table)
+allthreats2$category <- as.factor(allthreats2$category)
+summary(allthreats2)
+
+query_threat<- select(allthreats2, -A2.4.1, -B5.1.4, -B5.2.1, -B5.2.3, -B5.4.5,
+                      -N7.2.2, -I8.3, -I8.5.2, -I8.6, -P9.6, -P9.6.1, -P9.6.2,
+                      -P9.6.3, -P9.6.4, -G10.2)
+x <- select(query_threat, species_list , R1.1,R1.2, R1.3, A2.1, A2.2,  A2.3, A2.4,  E3.1, E3.2, E3.3,T4.1,T4.2, T4.3, T4.4, B5.1 , B5.2, B5.3 , B5.4, H6.1, H6.2, H6.3, N7.1, N7.2, N7.3, I8.1, I8.2,I8.4 , I8.5 ,P9.1, P9.2 , P9.3, P9.4, P9.5, G10.1, G10.3, C11.1, C11.2, C11.3,C11.4, C11.5,category)   
+
+querythreatVU <- sqldf("SELECT * FROM x WHERE category == 'VU' ")
+querythreatEN <- sqldf("SELECT * FROM x WHERE category == 'EN' ")
+querythreatCR <- sqldf("SELECT * FROM x WHERE category == 'CR' ")
+querythreatNT <- sqldf("SELECT * FROM x WHERE category == 'NT' ")
+querythreatLC <- sqldf("SELECT * FROM x WHERE category == 'LC' ")
+
+#VU plot 
+querythreatVU.1 <- select(querythreatVU, -species_list, -category)
+name <- colnames(querythreatVU.1)
+sum <- colSums(querythreatVU.1)
+df <- data.frame(name, sum)
+name <- df$name
+sum <- df$sum
+
+names2 <- c("Res.Housing", "Res.Commerical", "Res.Tourism", "Agr.crops", "Agr.Wood", 
+            "Agr.livestock", "Agr.Marine", "Energy.Oil", "Energy.Mining", "Energy.Renewable",
+            "Trans.Roads", "Trans.Utility", "Trans.Shipping", "Trans.Flight", "Bio.Hunt", "Bio.Gather", "Bio.Logging", "Bio.Fishing", "Human.Rec", "Human.War", "Human.Work", "Natural.Fire", "Natural.Dams", "Natural.Other", "Invasive.species", "Problematic.native", "Problematic.species","Viral.prion", "Pollution.water", "Pollution.Industrial", "Pollution.Agr","Pollution.Garbage", "Pollution.Air", "Volacnoes", "Avalanche", "Clim.Habitat", "Clim.droughts", "Clim.Temp", "Clim.Storms","Clim.Other")
+
+df_vu2 <- data.frame(names2, sum)
+df_vu <- data.frame(name, sum)
+
+```
+
+
+
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r a_vu, echo=FALSE}
+
+
+a_vu <- ggplot(data = df_vu2, aes(x = names2, y = sum, fill = names2)) + geom_bar(stat = "identity") + 
+  labs(title = "Threats Affecting 'Vulnerable' Amphibians") + theme_minimal() +
+  xlab("Threat Type") + ylab("Number of Species") + 
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) 
+a_vu <- a_vu + guides(fill = guide_legend(title = "Threat Type"))
+
+a_vu
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
