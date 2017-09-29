@@ -98,16 +98,28 @@ leaflet () %>%
     addTiles() %>% 
     addRectangles( lat = 37.3858, lng1 = -122.0595, 
                    lat2 = 37.3890, lng2 = -122.0625)
-#Left off on the last part of video 6/6 - need to see how to 
-#add a legent. 
+df <- data.frame (lat = runif (20, min = 39.25, max = 39.35),
+                  lng = runif (20, min = -76.65, max = -76.55),
+                  col = sample (c("red", "blue", "green"), 20, replace = TRUE),
+                  stringsAsFactors = FALSE)
+
+### Adding a Legend 
+df %>% 
+  leaflet() %>% 
+  addTiles() %>%
+  addCircleMarkers(color = df$col) %>% 
+  addLegend(labels = LETTERS[1:3], colors = c("blue", "red", "green"))
 
 
+#LetsR Function?
 
-  
-
-
-          
-
+data(PAM) # Phyllomedusa presence-absence matrix
+require(maptools)
+data(wrld_simpl) # World map
+Brazil <- wrld_simpl[wrld_simpl$NAME == "Brazil", ] # Brazil (polygon)
+# Check where is the variable name
+# (in this case it is in "NAME" which will be my z value)
+names(Brazil)
 
 
 
