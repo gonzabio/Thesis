@@ -147,3 +147,55 @@ data <- readOGR(dsn = "/Users/Alexandra_Gonzalez/Downloads/ANURA/", layer = "ANU
 z <- readOGR("/Users/Alexandra_Gonzalez/Downloads/ANURA/ANURA.shp")
 summary(z)
 
+onerow <- z[1,]
+summary(onerow)
+
+class(onerow)
+crs(onerow)
+extent(onerow)
+onerow
+
+
+####
+#### Notes from:http://neondataskills.org/R/open-shapefiles-in-R/
+####
+#Object Type: the class of the imported object
+#Coordinate Reference System (CRS): the projection of the data
+#extent: the spatial extent (geographic area that the shapefile covers) of the
+        #shapefile. Note that the spatial extent for a shapefile represents
+        #the extent of ALL spatial objects in the shapefile. 
+
+######################################
+
+#View just the class for the shapefile 
+class(onerow)
+    #its a polygon
+
+
+    #options: point, line, polygon 
+
+######################################
+#view just the crs for the shapefile 
+
+crs(onerow) 
+  #CRS arguments:
+    #+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0 
+  ###### so - the imporant information here is "longlat" because that 
+  ###### specifies the units 
+######################################
+#view just hte extent for the shapefile 
+
+extent(onerow)
+   #class       : Extent 
+   #xmin        : 46.68178 
+   #xmax        : 47.66114 
+   #ymin        : -22.41103 
+   #ymax        : -19.17633 
+
+
+  ##### so - this is imporant because it specifies the extent of the shapefile
+          #for ALLLLL objects in the shapefile 
+
+#LEFT OFF ON - SPATIAL DATA ATTRIBUTES OF THE POSTED LINK
+
+
