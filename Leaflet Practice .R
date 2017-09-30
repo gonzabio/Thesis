@@ -122,4 +122,28 @@ Brazil <- wrld_simpl[wrld_simpl$NAME == "Brazil", ] # Brazil (polygon)
 names(Brazil)
 
 
+#CANT LOAD DATA IN (From IUCN spatial amphibain section)
+#From: R Functions - A place to share and lear about R. Mainly destined to ecologists 
+#Following code by Jose Hidasi 
+
+#First, install and load 'sp' and 'rdgal' packages 
+require("sp")
+library(sp)
+library(rgdal)
+
+data <- readOGR("C:/Herpetology", "ANURA.shp")
+
+#Error in opening file 
+file.exists('ANURA.shp')
+readOGR(dsn = path.expand(".", layer = "ANURA.shp"))
+library(raster)
+s <- shapefile("Anura.shp")
+getwd()
+
+#file.exists("/Users/Alexandra_Gonzalez/Desktop/SORT/Herpetology", "ANURA.shp")
+
+#FIGURED OUT HOW TO DOWNLOAD DATA 
+data <- readOGR(dsn = "/Users/Alexandra_Gonzalez/Downloads/ANURA/", layer = "ANURA.shp")
+z <- readOGR("/Users/Alexandra_Gonzalez/Downloads/ANURA/ANURA.shp")
+summary(z)
 
