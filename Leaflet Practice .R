@@ -195,7 +195,34 @@ extent(onerow)
 
   ##### so - this is imporant because it specifies the extent of the shapefile
           #for ALLLLL objects in the shapefile 
+### Spatial Data Attributes 
+  # - Each object in a shapefil ehas one or more attributes 
+      #associated with it 
+  # - Think of an excel sheet with these columns that describe
+      #each spatial attribute
 
-#LEFT OFF ON - SPATIAL DATA ATTRIBUTES OF THE POSTED LINK
+#ATTRIBUTE DATA ARE STORED IN .DBF FILE 
+
+onerow@data
+
+
+# Metadata & Attribute Summary 
+summary(onerow)
+
+
+#Create a plot of the shapefile
+      #lwd sets the line width
+      #col sets internal color
+      #border sets line color 
+
+scaphiopododidae <- plot (onerow, col = "red", border = "black", lwd = 3,
+      main = "Scaphiophryne madagascariensis Boundary Plot")
+
+
+
+
+
+
+
 
 
