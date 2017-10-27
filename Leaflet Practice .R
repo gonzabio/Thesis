@@ -216,7 +216,15 @@ summary(onerow)
       #border sets line color 
 
 scaphiopododidae <- plot (onerow, col = "red", border = "black", lwd = 3,
-      main = "Scaphiophryne madagascariensis Boundary Plot")
+      main = "Scaphiophryne madagascariensis Boundary Plot"))
+
+
+
+### Remember: the goal is to take the spatial data from IUCN of critically endangered frogs
+### and use that spatial data to map something in R. 
+      # I have the data from the IUCN and now I just have to plot it on the map
+      # Remember to go back and look at the data and perform different types of 
+      # statistical analyses on IUCN data. 
 
 
 
