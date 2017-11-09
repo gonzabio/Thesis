@@ -1,14 +1,14 @@
 #Data analysis 
 #May 29, 2017 
 
-
+#FIGURE OUT WTF IS HAPPENING HERE 
 
 token <- "cf51b7524f618f5b23220e687b70c01d0d240cc82d179cf2c5b08b70fdfb83d4" 
 library(rredlist)
 library(RSQLite)
 library(sqldf)
 library(dplyr)
-
+library(ggplot2)
 ####HABITAT 
 
 #From Previous script (Already saved on local desktop): 
@@ -305,7 +305,7 @@ names2 <- c("Res.Housing", "Res.Commerical", "Res.Tourism", "Agr.crops", "Agr.Wo
             "Clim.Other")
 df_lc2 <- data.frame(names2, sum)
 
-
+#Threats affecting least concern amphibains (bar graph - not good)
 e_lc <- ggplot(data = df_lc2, aes(x = names2, y = sum, fill = names2)) + geom_bar(stat = "identity") + 
   labs(title = "Threats Affecting 'Least Concern' Amphibians") + theme_minimal() +
   xlab("Threat Type") + ylab("Number of Species") + 
