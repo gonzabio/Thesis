@@ -539,6 +539,16 @@ write.csv (export_data, file = "sample_species3.csv")
 
 ```
 
+# Sample Species update 
+- Succesfully able to create the join on ArcGis 
+- Data saved under Sample_Species on thumb drive 
+- Figure out if ArcGis will be used or other r pacakge 
+  make sure conservation mapping tool from Microsoft is gucci (that it doesn't conflict with what im doing)  i dont think it does - that was developed in 2014 and seems like it was made so that researches could input conservation data (including threats). This is then captured in the species range - doesnt seem like a widescale assesment has been completed of species threats 
+
+
+
+
+
 
 ## Next (Week of Jan. 16, 2017)
 
