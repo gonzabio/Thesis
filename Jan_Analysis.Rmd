@@ -537,6 +537,7 @@ practice
 export_data <- pop_threat_tables(practice) 
 write.csv (export_data, file = "sample_species3.csv")
 
+
 ```
 
 # Sample Species update 
@@ -559,8 +560,20 @@ After the sample table has been imported and joined to ArcGis - here is a list o
 2. Add id_num. Species name may not be enough when performing the join - need to capture
   the id as it is represented in IUCN database. 
 3. Map all threats 
-
-
-
-
+4. need to parse the threats by region 
+  interesting - it seems as tho there are certain threats associated with 
+  certain regions. therefore, plotting all of threats as is will be a problem
+  
+  
+  
+  
+  maybe i can divide every species by region - and then plot by region 
+  so species --> function that pulls out regions (ex. europe) --> pull out 
+  species threats only in europe and map those 
+  
+  then you can map all species by a certain region at the same time 
+  
+  i think this makes sense 
+  there are only 12 regions 
+  might have to write more code - its not immediately obvious what the region of each thing is 
 
