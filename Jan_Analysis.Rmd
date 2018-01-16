@@ -8,43 +8,10 @@ output: html_document
 
 ## Overview & Purpose 
 
-The purpose of this document is to sort code, identify coding needs and more. 
-
-1. Sort code 
-
-  #As it currently stands, it is unclear what files represent what and in what order
-  the code should be analyzed. First step is clear organization
-  
-2. Identify if the id_num is being captured in the code
-
-  #For mapping purposes, it is more important to capture the id_num than 
-  it is to capture the species name. There can be multiple records 
-  of species because they are in different areas. However, these species records
-  have different id_num. Therefore, it is important to capture the correct
-  id_num to make sure that the threats are for that location
-  
-3. Map the threats 
-
-  #Once the id_num is assocaited with each species threat table, export the table
-  from here to an excel doc. Then, import that doc to ArcGis. 
-  ArcGis already has a table (the spatial data from IUCN). This spatial data 
-  has information on the polygons and each species range. Conduct a join by the id_num so that
-  the threats can be associated with the spatial data. From there, the threats
-  can be mapped. 
-  
-
-## 1 Sort Code
-
-See file Final Project.R in the Herpetology>code file. This is a good starting point for 
-organizing the code. Lays out all of the code that has been written. Good starting point. 
-
-
-## 2 Identify if id_num is captured in the code
-
-After reading the Final Project file, id_num is NOT captured. Before going back and rewritting
-all of the code, some test species are going to be used (about ten or so) and try to map them. 
-
-First will identify which ones are represented in the spatial data and work backwards 
+The purpose of this document is to take a sample of species, create a threat table
+and import to ArcGis. 
+In ArcGis, the goal is to create a join by species name and map the threats listed in
+the table. 
          
 
 
@@ -568,14 +535,20 @@ sample_species <- c("Amolops jinjiangensis","Rhinella justinianoi", "Batrachuper
 practice <- sp_threats(sample_species)
 practice
 export_data <- pop_threat_tables(practice) 
-write.table(x = export_data, file = "sample_species2.csv", sep = "\t")
+write.csv (export_data, file = "sample_species3.csv")
 
 ```
 
 
+## Next (Week of Jan. 16, 2017)
 
+After the sample table has been imported and joined to ArcGis - here is a list of things that need to be taken care of next: 
 
-
+1. Clean code (add descriptions - it is unclear what some of the functions mean)
+  w/in herpetology folder - Code>Final Project.R has a list of all functions and analysis
+2. Add id_num. Species name may not be enough when performing the join - need to capture
+  the id as it is represented in IUCN database. 
+3. Map all threats 
 
 
 
