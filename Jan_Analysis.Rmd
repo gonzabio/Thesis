@@ -575,5 +575,12 @@ After the sample table has been imported and joined to ArcGis - here is a list o
   
   i think this makes sense 
   there are only 12 regions 
-  might have to write more code - its not immediately obvious what the region of each thing is 
+  might have to write more code - its not immediately obvious what the region of each   thing is  
 
+
+
+
+
+  OKAY basically need to download all of the data again 
+  because there was an update in the data (late 2017) - no point in doing the 
+  maps with outdated data 
