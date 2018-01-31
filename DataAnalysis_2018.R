@@ -1,7 +1,8 @@
 #Data Analysis 
 
-#Purpose: write code for FINAL thing. Need to clean up the data to be able to do 
-#data analysis. See what type of data analysis I can do 
+#Purpose: writing code for final thesis project. 
+#Bring suggested data analysis to Prof. Sun on Friday 
+#Redownload the newest IUCN data (because it was recently updated)
 
 
 library("profvis") 
@@ -84,4 +85,38 @@ CRsubspecies <- subspecies(CR)
 EWsubspecies <- subspecies(EW)
 EXsubspecies <- subspecies(EX)
 DDsubspecies <- subspecies(DD)
+
+#4 Up until this point, the data we are dealing with can be from any organism. 
+  #We need to pull out amphibain specific data 
+
+
+
+
+###############~WORKING~######################################
+sp_class <- function (species_list){
+  #Des.: Traverses through a list, and pulls out Class = AMPHIBIA
+  #Input: species_list is any list of species w/ and w/o amphibians 
+  #Output: Vector of Amphibians 
+  amphibian_list <- vector(length = length(species_list), 
+                           mode = "character")  
+  failed <- vector(length = length(species_list), mode = "character")
+  i <- 1 
+  for (species in species_list){
+    general_info <- rl_search(species, key = token)
+    tax <- general_info$result$class
+    Sys.sleep(2) 
+    if (general_info[1] == "0"){
+      failed[i] <- species 
+    }else if (tax == "AMPHIBIA"){
+      amphibian_list[i] <- species
+    }
+    i <- i+1
+  }
+  amph <- amphibian_list[amphibian_list != ""]
+  return(amph)
+}  
+
+
+
+
 
