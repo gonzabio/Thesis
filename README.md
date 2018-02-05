@@ -1,3 +1,5 @@
+
+
 # Thesis
 Rough draft of Thesis Project
 
@@ -15,8 +17,7 @@ Main Questions (To be completed for Latin America Amphibainans and SE Asia amphi
 - What is the most lethal threat combination?
 - What threats occur together the most? 
 - Is there a relationship between threat status and endangerment level (i.e. most critically endangered amphibians have chytrid fungus)?
-
-
+- By plotting threats on a map by species range, what insights can we infer? (GIS component) 
 
 Three main folders: 
 (1) Code: scripting docs 
