@@ -1,4 +1,5 @@
 #Data Analysis 
+#Last updated: Feb 6, 2018 
 
 #Purpose: writing code for final thesis project. 
 #Bring suggested data analysis to Prof. Sun on Friday 
