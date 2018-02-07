@@ -87,13 +87,7 @@ EWsubspecies <- subspecies(EW)
 EXsubspecies <- subspecies(EX)
 DDsubspecies <- subspecies(DD)
 
-#4 Up until this point, the data we are dealing with can be from any organism. 
-  #We need to pull out amphibain specific data 
-
-
-
-
-###############~WORKING~######################################
+#4 copying over sp_class function, pulling out class = amphibai 
 sp_class <- function (species_list){
   #Des.: Traverses through a list, and pulls out Class = AMPHIBIA
   #Input: species_list is any list of species w/ and w/o amphibians 
@@ -119,5 +113,33 @@ sp_class <- function (species_list){
 
 
 
+#4 cont. created sp_class2 - this is the same as sp_class,
+  #however, this one lets you put in tax_class as the parameter 
+  #which opens it up to other taxonomy classes (NOT SURE IF THIS WORKS)
+
+sp_class2 <- function (species_list, tax_class){
+  #Des.: Traverses through a list, and pulls out Class = AMPHIBIA
+  #Input: species_list is any list of species w/ and w/o amphibians 
+        #tax_class - in quotes the class you're looking for 
+  #Output: Vector of Amphibians 
+  amphibian_list <- vector(length = length(species_list), 
+                           mode = "character")  
+  failed <- vector(length = length(species_list), mode = "character")
+  i <- 1 
+  for (species in species_list){
+    general_info <- rl_search(species, key = token)
+    tax <- general_info$result$class
+    Sys.sleep(2) 
+    if (general_info[1] == "0"){
+      failed[i] <- species 
+    }else if (tax == tax_class){
+      amphibian_list[i] <- species
+    }
+    i <- i+1
+  }
+  amph <- amphibian_list[amphibian_list != ""]
+  return(amph)
+}  
 
 
+hey <- sp_class2(DD_species[1:10], "AMPHIBIA")
