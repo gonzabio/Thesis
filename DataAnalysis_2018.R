@@ -148,7 +148,7 @@ LC_amphibians3 <- sp_class(LC_species[1001:2000])
 LC_amphibians4 <- sp_class(LC_species[2001:2010])
 LC_amphibains5 <- sp_class(LC_species[2011:2030])
 LC_amphibians6 <- sp_class(LC_species[2031:2100])
-
+#LC_amphibians7 <- sp_class(LC_species[2101:2400]) 
 
 
     #Create on a function that will traverse through old list of LC before filtered - 
