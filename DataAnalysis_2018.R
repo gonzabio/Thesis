@@ -112,7 +112,6 @@ sp_class <- function (species_list){
 }  
 
 
-
 #4 cont. created sp_class2 - this is the same as sp_class,
   #however, this one lets you put in tax_class as the parameter 
   #which opens it up to other taxonomy classes (NOT SURE IF THIS WORKS)
@@ -142,4 +141,24 @@ sp_class2 <- function (species_list, tax_class){
 }  
 
 
-hey <- sp_class2(DD_species[1:10], "AMPHIBIA")
+#5 Get amphibian data - need to start making this run 
+
+LC_amphibians2 <- sp_class(LC_species[1:1000])
+LC_amphibians3 <- sp_class(LC_species[1001:2000])
+LC_amphibians4 <- sp_class(LC_species[2001:2010])
+LC_amphibains5 <- sp_class(LC_species[2011:2030])
+LC_amphibians6 <- sp_class(LC_species[2031:2100])
+
+
+
+    #Create on a function that will traverse through old list of LC before filtered - 
+    #pick out what is the same...and then show what is different
+#LC2017 <- LCC
+
+
+
+
+
+
+
+
