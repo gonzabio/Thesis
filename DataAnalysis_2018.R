@@ -148,9 +148,13 @@ LC_amphibians3 <- sp_class(LC_species[1001:2000])
 LC_amphibians4 <- sp_class(LC_species[2001:2010])
 LC_amphibains5 <- sp_class(LC_species[2011:2030])
 LC_amphibians6 <- sp_class(LC_species[2031:2100])
+<<<<<<< HEAD
 LC_amphibians7 <- sp_class(LC_species[2101:2180])
 LC_amphibians8 <- sp_class(LC_species[2181:2250])
 
+=======
+#LC_amphibians7 <- sp_class(LC_species[2101:2400]) 
+>>>>>>> 1f4cf2b2cbf8eb83d779c58925ed2d3ecd883a6b
 
 
 #Error: lexical error: invalid char in json text.
