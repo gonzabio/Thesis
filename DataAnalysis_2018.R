@@ -148,13 +148,26 @@ LC_amphibians3 <- sp_class(LC_species[1001:2000])
 LC_amphibians4 <- sp_class(LC_species[2001:2010])
 LC_amphibains5 <- sp_class(LC_species[2011:2030])
 LC_amphibians6 <- sp_class(LC_species[2031:2100])
-<<<<<<< HEAD
 LC_amphibians7 <- sp_class(LC_species[2101:2180])
 LC_amphibians8 <- sp_class(LC_species[2181:2250])
+LC_amphibians9 <- sp_class(LC_species[2251:2400])
+LC_amphibains10 <- sp_class(LC_species[2401:2700])
+LC_amphibians11 <- sp_class(LC_species[2701:3100])
+LC_amphibains12 <- sp_class(LC_species[3101:3300])
+LC_amphibains13 <- sp_class(LC_species[3301:3600])
+LC_amphibians14 <- sp_class(LC_species[3601:3800])
+LC_amphibians15 <- sp_class(LC_species[4000:4300])
+LC_amphibains16 <- sp_class(LC_species[4301:4600])
+LC_amphibians17 <- sp_class(LC_species[4601:4900])
+LC_amphibians18 <- sp_class(LC_species[4901:5200])
+LL_amphibians19 <- sp_class(LC_species[5201:5500])
+LC_amphibians20 <- sp_class(LC_species[5501:6000])
+LC_amphibians21 <- sp_class(LC_species[6001:6500])
+LC_amphibians22 <- sp_class(LC_species[6501:7000])
+LC_amphibains23 <- sp_class(LC_species[7001:7500])
+LC_amphibians24 <- sp_class(LC_species[7501:8200])
 
-=======
-#LC_amphibians7 <- sp_class(LC_species[2101:2400]) 
->>>>>>> 1f4cf2b2cbf8eb83d779c58925ed2d3ecd883a6b
+
 
 
 #Error: lexical error: invalid char in json text.
@@ -163,7 +176,7 @@ LC_amphibians8 <- sp_class(LC_species[2181:2250])
 
     #Create on a function that will traverse through old list of LC before filtered - 
     #pick out what is the same...and then show what is different
-#LC2017 <- LCC
+##LC2017 <- LCC
 
 
 
