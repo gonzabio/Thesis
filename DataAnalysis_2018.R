@@ -199,5 +199,19 @@ setwd("/Users/Alexandra_Gonzalez/Downloads/AmphiBIO_v1")
 getwd()
 amphiBIO <- read.csv("AmphiBIO_v1.csv", header = TRUE)
 head(amphiBIO)
-count(amphiBIO)
-count(iucn_data)
+head(amphiBIO)
+head(iucn_data)
+
+
+class(amphiBIO$Species)
+class(iucn_data$Species)
+
+#IUCN data seperates species and genus. AmphibBIO has them together. Code to create
+#a new column to make species in IUCN_Data = Genus + species 
+new_species <- data.frame(A = iucn_data$Genus, B = iucn_data$Species)
+iucn_data$new_species <- paste(new_species$A, new_species$B, sep=" ")
+class(iucn_data$new_species)
+
+
+library(sqldf)
+all_data <- sqldf("SELECT ")
