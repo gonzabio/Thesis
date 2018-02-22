@@ -186,6 +186,9 @@ setwd("/Users/Alexandra_Gonzalez/Downloads")
 iucn_data <- read.csv("export-89207.csv", header = TRUE)
 head(iucn_data)
 
-
+setwd("/Users/Alexandra_Gonzalez/Downloads/AmphiBIO_v1")
+getwd()
+amphiBIO <- read.csv("AmphiBIO_v1.csv", header = TRUE)
+head(amphiBIO)
 
 
