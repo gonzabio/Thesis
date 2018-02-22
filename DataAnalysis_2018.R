@@ -180,7 +180,13 @@ sp_class2 <- function (species_list, tax_class){
     #Create on a function that will traverse through old list of LC before filtered - 
     #pick out what is the same...and then show what is different
 ##LC2017 <- LCC
-
+#######Up until this point, ^^^ trying to download data using 2 second method 
+####### SLOW AS HELL 
+####### downloaded/imported data straight from IUCN and amphiBIO and instead am going to use
+####### the functions created to include threat analyses to make a comprehensive view 
+            #IDEA: consider making a function that automatically downloads IUCN and amphiBIO 
+            #data and joins it with the threat data that I am working on accumulating 
+            #so researchers can have table with combined info off the jump 
 getwd()
 setwd("/Users/Alexandra_Gonzalez/Downloads")
 iucn_data <- read.csv("export-89207.csv", header = TRUE)
@@ -190,5 +196,5 @@ setwd("/Users/Alexandra_Gonzalez/Downloads/AmphiBIO_v1")
 getwd()
 amphiBIO <- read.csv("AmphiBIO_v1.csv", header = TRUE)
 head(amphiBIO)
-
-
+count(amphiBIO)
+count(iucn_data)
