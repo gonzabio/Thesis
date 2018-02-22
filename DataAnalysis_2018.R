@@ -187,11 +187,14 @@ sp_class2 <- function (species_list, tax_class){
             #IDEA: consider making a function that automatically downloads IUCN and amphiBIO 
             #data and joins it with the threat data that I am working on accumulating 
             #so researchers can have table with combined info off the jump 
+#IUCN
 getwd()
 setwd("/Users/Alexandra_Gonzalez/Downloads")
 iucn_data <- read.csv("export-89207.csv", header = TRUE)
 head(iucn_data)
 
+#AmphiBIO 
+  #https://www.nature.com/articles/sdata2017123 (scroll down to Data Records)
 setwd("/Users/Alexandra_Gonzalez/Downloads/AmphiBIO_v1")
 getwd()
 amphiBIO <- read.csv("AmphiBIO_v1.csv", header = TRUE)
