@@ -211,7 +211,17 @@ class(iucn_data$Species)
 new_species <- data.frame(A = iucn_data$Genus, B = iucn_data$Species)
 iucn_data$new_species <- paste(new_species$A, new_species$B, sep=" ")
 class(iucn_data$new_species)
+iucn_data$new_species <- as.factor(iucn_data$new_species)
 
 
 library(sqldf)
-all_data <- sqldf("SELECT ")
+test <- sqldf("SELECT * FROM iucn_data INNER JOIN amphiBIO ON amphiBIO.Species = iucn_data.new_species")
+summary(test) 
+  #Joining IUCN and AmphiBIO data together 
+
+Missing <- setdiff(iucn_data$new_species, amphiBIO$Species)
+  #Finding inconsistencies between them. ^^ These 700 + are missing from running total 
+  #because they don't match 
+
+
+
