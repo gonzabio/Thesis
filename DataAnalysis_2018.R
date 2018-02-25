@@ -180,6 +180,14 @@ sp_class2 <- function (species_list, tax_class){
     #Create on a function that will traverse through old list of LC before filtered - 
     #pick out what is the same...and then show what is different
 ##LC2017 <- LCC
+
+
+
+
+
+
+
+
 #######Up until this point, ^^^ trying to download data using 2 second method 
 ####### SLOW AS HELL 
 ####### downloaded/imported data straight from IUCN and amphiBIO and instead am going to use
@@ -213,15 +221,83 @@ iucn_data$new_species <- paste(new_species$A, new_species$B, sep=" ")
 class(iucn_data$new_species)
 iucn_data$new_species <- as.factor(iucn_data$new_species)
 
-
+#Joins both datasets 
 library(sqldf)
-test <- sqldf("SELECT * FROM iucn_data INNER JOIN amphiBIO ON amphiBIO.Species = iucn_data.new_species")
-summary(test) 
+combined_df <- sqldf("SELECT * FROM iucn_data INNER JOIN amphiBIO ON amphiBIO.Species = iucn_data.new_species")
+summary(combined_df) 
   #Joining IUCN and AmphiBIO data together 
 
 Missing <- setdiff(iucn_data$new_species, amphiBIO$Species)
   #Finding inconsistencies between them. ^^ These 700 + are missing from running total 
   #because they don't match 
 
+ifelse(iucn_data$new_species == test$new_species, row.names(iucn_data),0 )
+          #tomorrow/ or next week - come up with a solid way of knowing which
+          #info came from where (i.e. of the missing amphibains that aren't in BOTH
+          #IUCN and AmphiBIO...which database is lacking???)
 
+
+
+
+#Next Steps: 
+  #Clean data (Make columns nice, rename columns, add functions)
+  #logistic and linear regressions (?)
+  #Add threats
+
+#Practice linear regression 
+      #LM on body size 
+linearmod <- lm(combined_df$Body_mass_g ~ combined_df$Offspring_size_max_mm, data = combind_df)
+summary(linearmod)
+
+
+lm1 <- lm(Body_size_mm ~ Offspring_size_min_mm + 
+                Reproductive_output_y + Litter_size_max_n, data = combined_df)
+summary(lm1)
+      #Results: R  = 0.069. 
+      #Lots of data is being delted because of missingness? 
+
+lm2 <- lm(combined_df$Body_size_mm ~ combined_df$Family + combined_df$Genus + combined_df$Red.List.status +
+          combined_df$Population.trend)
+summary(lm2)
+plot(lm2)
+
+lm3 <- lm(combined_df$Body_size_mm ~ combined_df$Population.trend + 
+            combined_df$Red.List.status + combined_df$Genus)
+summary(lm3)
+
+lm4 <- lm(combined_df$Body_size_mm ~ combined_df$Genus)
+summary(lm4)
+      #Results: 
+      #Genus has a relationship with body_size (unsurprisingly) 
+lm5 <- glm(combined_df$Population.trend ~ combined_df$Body_mass_g + combined_df$Body_size_mm)
+
+################
+
+#GET THREAT DATA 
+
+sp_threats <- function(species_list){
+  threat_code <- vector(length = length(species_list),
+                        mode = "character")
+  i <- 1 
+  for (species in species_list){
+    threats <- rl_threats(species, key = token)
+    code <- threats$result$code
+    threat_code[i] <- paste(code, collapse = " ")
+    i <- i + 1   
+  }
+  final_results <- data.frame(species_list, threat_code)
+  return(final_results)
+} #df of species and threat codes 
+
+
+iucn_threats1 <- sp_threats(combined_df$new_species[1:1000])
+iucn_threats2 <- sp_threats(combined_df$new_species[1001:2000])
+iucn_threats3 <- sp_threats(combined_df$new_species[2001:3000])
+iucn_threats4 <- sp_threats(combined_df$new_species[3001:4000])
+iucn_threats5 <- sp_threats(combined_df$new_species[4001:5000])
+iucn_threats6 <- sp_threats(combined_df$new_species[5001:5847])
+iucn_threats7 <- sp_threats(combined_df$new_species[5848:5857])
+
+threat_code <- rbind(iucn_threats1, iucn_threats2, iucn_threats3, iucn_threats4,
+                 iucn_threats5, iucn_threats6, iucn_threats7)
 
