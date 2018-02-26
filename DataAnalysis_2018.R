@@ -247,32 +247,6 @@ ifelse(iucn_data$new_species == test$new_species, row.names(iucn_data),0 )
   #logistic and linear regressions (?)
   #Add threats
 
-#Practice linear regression 
-      #LM on body size 
-linearmod <- lm(combined_df$Body_mass_g ~ combined_df$Offspring_size_max_mm, data = combind_df)
-summary(linearmod)
-
-
-lm1 <- lm(Body_size_mm ~ Offspring_size_min_mm + 
-                Reproductive_output_y + Litter_size_max_n, data = combined_df)
-summary(lm1)
-      #Results: R  = 0.069. 
-      #Lots of data is being delted because of missingness? 
-
-lm2 <- lm(combined_df$Body_size_mm ~ combined_df$Family + combined_df$Genus + combined_df$Red.List.status +
-          combined_df$Population.trend)
-summary(lm2)
-plot(lm2)
-
-lm3 <- lm(combined_df$Body_size_mm ~ combined_df$Population.trend + 
-            combined_df$Red.List.status + combined_df$Genus)
-summary(lm3)
-
-lm4 <- lm(combined_df$Body_size_mm ~ combined_df$Genus)
-summary(lm4)
-      #Results: 
-      #Genus has a relationship with body_size (unsurprisingly) 
-lm5 <- glm(combined_df$Population.trend ~ combined_df$Body_mass_g + combined_df$Body_size_mm)
 
 ################
 
