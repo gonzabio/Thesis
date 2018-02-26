@@ -209,9 +209,12 @@ amphiBIO <- read.csv("AmphiBIO_v1.csv", header = TRUE)
 head(amphiBIO)
 head(amphiBIO)
 head(iucn_data)
+amphiBIO <- select(amphiBIO, -Order, -Family, -Genus)
+amphiBIO$a_Species <- amphiBIO$Species
+amphiBIO <- select(amphiBIO, -Species)
 
 
-class(amphiBIO$Species)
+class(amphiBIO$a_Species)
 class(iucn_data$Species)
 
 #IUCN data seperates species and genus. AmphibBIO has them together. Code to create
@@ -223,11 +226,11 @@ iucn_data$new_species <- as.factor(iucn_data$new_species)
 
 #Joins both datasets 
 library(sqldf)
-combined_df <- sqldf("SELECT * FROM iucn_data INNER JOIN amphiBIO ON amphiBIO.Species = iucn_data.new_species")
+combined_df <- sqldf("SELECT * FROM iucn_data INNER JOIN amphiBIO ON amphiBIO.a_Species = iucn_data.new_species")
 summary(combined_df) 
   #Joining IUCN and AmphiBIO data together 
 
-Missing <- setdiff(iucn_data$new_species, amphiBIO$Species)
+Missing <- setdiff(iucn_data$new_species, amphiBIO$a_Species)
   #Finding inconsistencies between them. ^^ These 700 + are missing from running total 
   #because they don't match 
 
@@ -785,3 +788,6 @@ combined_df$Order <- as.factor(combined_df$Order)
 combined_df$Family <- as.factor(combined_df$Family)
 combined_df$Genus <- as.factor(combined_df$Genus)
 combined_df$Infraspecific.rank <- as.factor(combined_df$Infraspecific.rank)
+
+
+test <- full_join(combined_df, threat_data2)
