@@ -789,5 +789,46 @@ combined_df$Family <- as.factor(combined_df$Family)
 combined_df$Genus <- as.factor(combined_df$Genus)
 combined_df$Infraspecific.rank <- as.factor(combined_df$Infraspecific.rank)
 
+combined_df$species_list <- as.factor(combined_df$species_list)
 
-test <- full_join(combined_df, threat_data2)
+
+colnames(combined_df)[colnames(combined_df) == "a_Species"] <- "species_list"
+
+test <- full_join(combined_df, threat_data2, by = "species_list")
+
+colnames(test)
+
+
+####STEPS TO GET ALL THIS DATA IN ONE SECTION
+      ### donwload the links for both, save as seperate variables
+      ##amphiBIO <- read.csv...etc
+      ##IUCN <- read.csv...etc.
+
+    #Problem #1: 
+      ##IUCN has Genus and species in two sep. columns. amphiBIO has it in one column 
+            #Solution 1: write code to create a new column, new_species in IUCN data where
+            #genus and species are in the same column
+    #Problem #2: 
+      ## When the amphiBIO is inner joined with IUCN, there are duplicate columns (Family, Genus, Species, Order)
+      ## this presents problems later on. 
+            #Solution 2: create a new column in amphiBIO called a_Species and delete  duplicate columns before
+            # doing the innerjoin. Create amphibiBIO$a_Species <- amphibiBIO$Species and then delete 
+            #Species, Genus, Order, Family 
+    #So now we have IUCN and amphiBIO combined. inner joined by IUCN.new_species and amphibiBIO.species_list 
+    #Problem #3: 
+      ## There are errors when I try to use sqldf to join threat table with the combined_df (that has IUCN + amphibiBIO)
+            #Solution: Instead, use dyplr package. test <- dyplr(combined_df, threat_data2, by = "species_list")
+    #Now, all of the data is in one big table. 
+    
+
+
+
+
+
+
+
+
+
+
+
+
