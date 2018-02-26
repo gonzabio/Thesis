@@ -773,4 +773,15 @@ summary(threat_data)
 threat_data2 <- select(threat_data, -A2.4.1, -B5.1.4, -B5.2.1, -B5.2.3, -B5.4.2, -B5.4.5,
                      -N7.2.2, -I8.3, -P9.6, -P9.6.1, -P9.6.2,
                       -P9.6.3, -P9.6.4, -G10.2)
+
 summary(threat_data2)
+
+library(dplyr)
+
+#Change to factor 
+combined_df$Phylum <- as.factor(combined_df$Phylum)
+combined_df$Class <- as.factor(combined_df$Class)
+combined_df$Order <- as.factor(combined_df$Order)
+combined_df$Family <- as.factor(combined_df$Family)
+combined_df$Genus <- as.factor(combined_df$Genus)
+combined_df$Infraspecific.rank <- as.factor(combined_df$Infraspecific.rank)
