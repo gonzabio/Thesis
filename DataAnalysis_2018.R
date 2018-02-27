@@ -764,6 +764,9 @@ combined_df$Genus <- as.factor(combined_df$Genus)
 combined_df$Infraspecific.rank <- as.factor(combined_df$Infraspecific.rank)
 
 combined_df$species_list <- as.factor(combined_df$species_list)
+threat_data2$species_list <- as.factor(threat_data2$species_list)
+
+
 
 
 colnames(combined_df)[colnames(combined_df) == "a_Species"] <- "species_list"
@@ -783,7 +786,7 @@ colnames(test)
             #Solution 1: write code to create a new column, new_species in IUCN data where
             #genus and species are in the same column
     #Problem #2: 
-      ## When the amphiBIO is inner joined with IUCN, there are duplicate columns (Family, Genus, Species, Order)
+      ## When the amphiBIO is inner joined with IUCN into combined_df, there are duplicate columns (Family, Genus, Species, Order)
       ## this presents problems later on. 
             #Solution 2: create a new column in amphiBIO called a_Species and delete  duplicate columns before
             # doing the innerjoin. Create amphibiBIO$a_Species <- amphibiBIO$Species and then delete 
@@ -793,15 +796,32 @@ colnames(test)
       ## There are errors when I try to use sqldf to join threat table with the combined_df (that has IUCN + amphibiBIO)
             #Solution: Instead, use dyplr package. test <- dyplr(combined_df, threat_data2, by = "species_list")
     #Now, all of the data is in one big table. 
-    
 
 
+#### CLEAN DATA 
+    #Step 1: Remove duplicate coumns 
+alldata <- select(test, -new_species)
+
+    #There is a similar variable called all_data so need to change the name
+finaldata <- alldata
+
+lapply(alldata, class)
+    #Problem: threat data is all class = numeric. 
+    #The threat data should be a factor 
+
+ncol(alldata[,59:161])
 
 
+for alldata[,i]{
+  i <- 59 
+  alldata[,i]<- as.factor(alldata)
+}
 
-
-
-
+i <- 59 
+if class(alldata[,i]) == "factor"
+  i <- i + 1
+else if class(alldata[,i]) == "numeric"
+  alldata[,i] <- as.factor(alldata[,i])
 
 
 
