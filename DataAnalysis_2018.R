@@ -822,6 +822,9 @@ for (i in num){
 
 class(alldata[,68])
 
+####Missing amphibian problems: 
+  #Problem 1: what are the amphibains missing from IUCN database, what are the ones missing from 
+  #AmphBIO database. How to know what's up? 
 vec_amphBIO <- amphiBIO$a_Species #6776 
 vec_iucn <- iucn_data$new_species #6609 
 
@@ -863,5 +866,20 @@ missing_from_IUCN <- function(vec_iucn, vec_amphBIO){
   return(empty_list)
 }
 e <- missing_from_IUCN(vec_iucn, vec_amphBIO)
+f <- e[1:919]
 
-rl_synonyms("Mannophryne orellana", key = token)
+
+(iucn_data$Synonyms[998])
+
+#Idea: trying to break up the synonyms from IUCN data that comes in the 
+#excel file.convert to character, use strsplit 
+  #embeded for loop 
+  #for synonnms in iucn_database
+        #synonmns (do string split ) now you have 
+        # species_synonms <- c(one synonmy, second synonm, third)
+    #for individual_synononmy in species_synonms   
+        #is.element(individual_synonnmy, missing_from_IUCN)
+        #if TRUE,
+            #save individual_synonme, iucn_species name 
+#goal is to export list of amphibians that need to be added to the 
+#alldata database 
