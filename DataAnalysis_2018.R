@@ -825,7 +825,7 @@ class(alldata[,68])
 vec_amphBIO <- amphiBIO$a_Species #6776 
 vec_iucn <- iucn_data$new_species #6609 
 
-missing_from_AmphiBIO <- function(vec_iucn){
+missing_from_AmphiBIO <- function(vec_iucn, vec_amphBIO){
   #Empty_list is a list of species that are in the IUCN list but are NOT 
   #in AmphiBIO list 
   #vec_iucn <- vector of IUCN species ...class = factor 
@@ -843,5 +843,25 @@ missing_from_AmphiBIO <- function(vec_iucn){
   } 
   return(empty_list)
 }
-d <- yes(vec_iucn)
+d <- missing_from_AmphiBIO(vec_iucn, vec_amphBIO)
 
+missing_from_IUCN <- function(vec_iucn, vec_amphBIO){
+  #What's in AmphBIO that is NOT in IUCN  
+  #vec_iucn <- vector of IUCN species ...class = factor 
+  #vec_amphBIO <- vector of AmphBio species 
+  #created by AmphBIO$new_species = vec_amphBIO 
+  #created by iucn_data$species_list = vec_iucn 
+  i <- 1
+  empty_list <- vector(length = length(vec_iucn), mode = "character")
+  for (species2 in vec_amphBIO){
+    result <- is.element(species2, vec_iucn)
+    if (result == FALSE){
+      empty_list[i] <- species2
+      i <- i + 1
+    } else{NULL}
+  } 
+  return(empty_list)
+}
+e <- missing_from_IUCN(vec_iucn, vec_amphBIO)
+
+rl_synonyms("Mannophryne orellana", key = token)
