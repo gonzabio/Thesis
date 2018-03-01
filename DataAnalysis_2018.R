@@ -811,18 +811,24 @@ lapply(alldata, class)
 
 ncol(alldata[,59:161])
 
-
-for alldata[,i]{
-  i <- 59 
-  alldata[,i]<- as.factor(alldata)
-}
-
 i <- 59 
-if class(alldata[,i]) == "factor"
+if (class(alldata[,i]) == "factor"){
   i <- i + 1
-else if class(alldata[,i]) == "numeric"
+} else {
   alldata[,i] <- as.factor(alldata[,i])
+} 
 
 
+
+
+class(alldata[,59])
+  
+  
+
+
+  
+  
+  
+  
 
 
