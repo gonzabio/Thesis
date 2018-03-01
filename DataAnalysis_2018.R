@@ -811,17 +811,16 @@ lapply(alldata, class)
 
 ncol(alldata[,59:161])
 
-i <- 59 
-if (class(alldata[,i]) == "factor"){
-  i <- i + 1
-} else {
+####
+####Convert 50+ columns to factor 
+####
+
+num <- c(59:161)
+for (i in num){
   alldata[,i] <- as.factor(alldata[,i])
-} 
+}
 
-
-
-
-class(alldata[,59])
+class(alldata[,68])
   
   
 
