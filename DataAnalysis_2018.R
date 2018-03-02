@@ -883,3 +883,33 @@ f <- e[1:919]
             #save individual_synonme, iucn_species name 
 #goal is to export list of amphibians that need to be added to the 
 #alldata database 
+
+
+check_synonyms <- function(not_in_iucn){
+  i <- 1 
+  no_synonyms <- vector(length = length(not_in_iucn), mode = "character")
+  current <- vector(length = length(not_in_iucn), mode = "character")
+  #Check if species that are in AmphBIO but not in the IUCN
+  #have synonyms and are actually represented 
+  for (species in not_in_iucn){
+    result <- rl_synonyms(name = species, key = token)
+    print(result)
+    if (result$count == 0){
+      i <- i + 1
+    } else {
+      accepted_name <- result$result$accepted_name
+      current[i] <- accepted_name[1]
+      i <- i + 1
+    print(i)
+  }
+  df <- data.frame(not_in_iucn, current)
+  return(df) 
+  ## PROBLEM: the indices are not adding right 
+  ## so its not adding up .
+  ## fix the indices !!!!!!!
+}
+
+
+
+
+rl_synonyms("Anomaloglossus confusus", key = token)
