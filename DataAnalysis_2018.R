@@ -869,23 +869,10 @@ e <- missing_from_IUCN(vec_iucn, vec_amphBIO)
 f <- e[1:919]
 
 
-(iucn_data$Synonyms[998])
-
-#Idea: trying to break up the synonyms from IUCN data that comes in the 
-#excel file.convert to character, use strsplit 
-  #embeded for loop 
-  #for synonnms in iucn_database
-        #synonmns (do string split ) now you have 
-        # species_synonms <- c(one synonmy, second synonm, third)
-    #for individual_synononmy in species_synonms   
-        #is.element(individual_synonnmy, missing_from_IUCN)
-        #if TRUE,
-            #save individual_synonme, iucn_species name 
-#goal is to export list of amphibians that need to be added to the 
-#alldata database 
 
 
 check_synonyms <- function(not_in_iucn){
+  ####NEEDS WORK
   i <- 1 
   no_synonyms <- vector(length = length(not_in_iucn), mode = "character")
   current <- vector(length = length(not_in_iucn), mode = "character")
@@ -904,12 +891,47 @@ check_synonyms <- function(not_in_iucn){
   }
   df <- data.frame(not_in_iucn, current)
   return(df) 
+  }
+}
   ## PROBLEM: the indices are not adding right 
   ## so its not adding up .
   ## fix the indices !!!!!!!
-}
 
 
+#### DATA ANALYSIS 
+
+library("profvis") 
+library("rredlist")
+library(RSQLite)
+library(sqldf)
+library(dplyr)
+require(ggplot2)
+require(reshape2)
+require(scales)
+library(tidyr)
+
+#Question 1: By extintion risk, what is the breakdown of threats? 
+            # By percent, see if more critically endangered frogs 
+            # have a higher % of chytrid fungus or habitat des. etc.
 
 
-rl_synonyms("Anomaloglossus confusus", key = token)
+alldata %>% summary()
+  #LC = 2271
+  #DD = 1300
+  #EN = 775
+  #VU = 617
+  #CR = 505 
+  #NT = 354 
+
+plot(alldata$Red.List.status)
+
+CR <- subset(alldata, alldata$Red.List.status == "CR")
+DD <- subset(alldata, alldata$Red.List.status == "DD")
+EN <- subset(alldata, alldata$Red.List.status == "EN")
+EW <- subset(alldata, alldata$Red.List.status == "EW")
+EX <- subset(alldata, alldata$Red.List.status == "LC")
+NT <- subset(alldata, alldata$Red.List.status == "NT")
+VU <- subset(alldata, alldata$Red.List.status == "VU")
+
+summaryCR <- summary(CR[59:161])  
+as.data.frame(summaryCR)
