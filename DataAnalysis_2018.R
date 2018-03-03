@@ -933,5 +933,4 @@ EX <- subset(alldata, alldata$Red.List.status == "LC")
 NT <- subset(alldata, alldata$Red.List.status == "NT")
 VU <- subset(alldata, alldata$Red.List.status == "VU")
 
-summaryCR <- summary(CR[59:161])  
-as.data.frame(summaryCR)
+
