@@ -932,5 +932,49 @@ EW <- subset(alldata, alldata$Red.List.status == "EW")
 EX <- subset(alldata, alldata$Red.List.status == "LC")
 NT <- subset(alldata, alldata$Red.List.status == "NT")
 VU <- subset(alldata, alldata$Red.List.status == "VU")
+summary(alldata$Order)
+
+#Correlation HeatMap 
+
+withoutnames <- alldata[,59:161]
+num <- c(1:103)
+for (i in num){
+  withoutnames[,i] <- as.numeric(withoutnames[,i])
+}
+class(withoutnames[,68])
+
+
+cor(withoutnames)
+length(withoutnames)
+
+
+
+#Correlation  
+colnames(withoutnames)
+Cordata <- cor(withoutnames)
+Cordata
+
+dataMelt <- melt(Cordata, varnames = c("x","y"), value.name = "Correlation")
+dataMelt <- dataMelt [order(dataMelt$Correlation),]
+dataMelt
+
+#Correlation Heatmap ~~~
+#with the habitat code 
+plot1 <- ggplot(dataMelt, aes(x=x, y=y)) + geom_tile (aes(fill = Correlation)) + 
+  scale_fill_gradient2(low = muted("red"), mid = "white", high = "blue")+
+  labs(title = "Correlation Heat Map of Habitat Types") + 
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) + 
+  xlab("Habitat types") + 
+  ylab("Habitat types")
+
+
+class(alldata$Red.List.status)
+
+
+
+USArrests
+#Left off needing to find a way to GROUP my data
+# i want to group it by Red List Cateogry, Order, Genus 
+
 
 
