@@ -1149,11 +1149,334 @@ plot_1 <- fviz_mca_var(res.mca, choice = "mca.cor",
 
 ########################################
 #LOGISTIC REGRESSION UP 
+march4 <- broad_threats2
+
+
+march5 <- march4 %>% filter(RedList_Status != "EX")
+march5 <- march5 %>% filter(RedList_Status != "EW")
+march5 <- march5 %>% filter(RedList_Status != "DD")
+
+march5$status <- ifelse(march5$RedList_Status == "LC" | march5$RedList_Status == "NT", "Not Threatened", "Threatened")
+
+
+march6 <- march5
+march6$status <- ifelse(march6$status == "Threatened", 1, 0)
+glm1 <- glm(status ~ Res_Housing + Climate_Drought,family = binomial(link="logit"), data = march6)
+summary(glm1)
+
+
+glm2 <- glm(status ~ Res_Housing + Res_Commercial,family = binomial(link="logit"), data = march6)
+summary(glm2)
+
+
+glm4 <- glm(status ~ Res_Housing + Res_Commercial + Res_Tourism +
+            Ag_Crops + Ag_Wood + Ag_Livestock + Ag_Aquaculture + 
+            Ag_Livestock + Ag_Aquaculture + Energy_Oil + Energy_Mining +
+              Energy_Renewables + Trans_Roads + Trans_Utility + Trans_Shipping + 
+            Trans_Flight + Bio_Hunting + Bio_Gathering + Bio_Logging + Bio_Fishing + 
+            Human_Recreation + Human_War + Human_Work + Natural_Fire + Natural_Dams + 
+              Natural_Other + Invasive_species_diseases + Problematic_native_species_diseases +
+              Problematic_unknown + Diseases_unknown +
+              Pollution_Water + Pollution_Military + Pollution_Agriculture + Pollution_Garbage +
+              Geological_Volcanoes + Geological_Avalanche + 
+              Climate_Habitat_shift + Climate_Drought + Climate_Temp_extreme + 
+              Climate_Storms + Climate_Other,family = binomial(link="logit"), data = march6)
+summary(glm4) #AIC = 5333, null deviance = 6151.1 
+
+glm5 <- glm(status ~ Res_Housing + Res_Commercial + Res_Tourism +
+              Ag_Crops + Ag_Wood + Ag_Livestock + Ag_Aquaculture + 
+              Ag_Livestock + Ag_Aquaculture + Energy_Oil + Energy_Mining +
+              Energy_Renewables + Trans_Roads + Trans_Utility + Trans_Shipping + 
+              Trans_Flight + Bio_Hunting + Bio_Gathering + Bio_Logging + Bio_Fishing + 
+              Human_Recreation + Human_War + Human_Work + Natural_Fire + Natural_Dams + 
+              Natural_Other + Invasive_species_diseases + Problematic_native_species_diseases +
+              Problematic_unknown + Diseases_unknown +
+              Pollution_Water + Pollution_Military + Pollution_Agriculture + Pollution_Garbage +
+              Geological_Volcanoes + Geological_Avalanche + 
+              Climate_Habitat_shift + Climate_Drought + Climate_Temp_extreme + 
+              Climate_Storms + Climate_Other,family = binomial(link="logit"), data = march6)
+              #Removed: Res_Tourism 
+summary(glm5) #AIC = 5333.1, null deviance = 6151.1
+
+glm6 <- glm(status ~ Res_Housing + Res_Commercial + Res_Tourism +
+              Ag_Crops + Ag_Wood + Ag_Livestock + Ag_Aquaculture + 
+              Ag_Livestock + Ag_Aquaculture + Energy_Oil + Energy_Mining +
+              Energy_Renewables + Trans_Roads + Trans_Utility + Trans_Shipping + 
+              Trans_Flight + Bio_Hunting + Bio_Gathering + Bio_Logging + Bio_Fishing + 
+              Human_Recreation + Human_Work + Natural_Fire + Natural_Dams + 
+              Natural_Other + Invasive_species_diseases + Problematic_native_species_diseases +
+              Problematic_unknown + Diseases_unknown +
+              Pollution_Water + Pollution_Military + Pollution_Agriculture + Pollution_Garbage +
+              Geological_Volcanoes + Geological_Avalanche + 
+              Climate_Habitat_shift + Climate_Drought + Climate_Temp_extreme + 
+              Climate_Storms + Climate_Other,family = binomial(link="logit"), data = march6)
+              #Removed: Res_Tourism 
+              #Human_War
+summary(glm6) #AIC = 5333.1, null deviance = 6151.1
+
+glm7 <- glm(status ~ Res_Housing + Res_Commercial + Res_Tourism +
+              Ag_Crops + Ag_Wood + Ag_Livestock + Ag_Aquaculture + 
+              Ag_Livestock + Ag_Aquaculture + Energy_Oil + Energy_Mining +
+              Energy_Renewables + Trans_Roads + Trans_Utility + 
+              Bio_Hunting + Bio_Gathering + Bio_Logging + Bio_Fishing + 
+              Human_Recreation + Human_Work + Natural_Fire + Natural_Dams + 
+              Natural_Other + Invasive_species_diseases + Problematic_native_species_diseases +
+              Problematic_unknown + Diseases_unknown +
+              Pollution_Water + Pollution_Military + Pollution_Agriculture + Pollution_Garbage +
+              Geological_Volcanoes + Geological_Avalanche + 
+              Climate_Habitat_shift + Climate_Drought + Climate_Temp_extreme + 
+              Climate_Storms + Climate_Other,family = binomial(link="logit"), data = march6)
+#Removed: Res_Tourism 
+#Human_War
+#Trans_Shipping
+#Trans_Flight
+summary(glm7) #AIC = 5329.5, null deviance = 6151.1
+
+glm8 <- glm(status ~ Res_Housing + Res_Commercial + Res_Tourism +
+              Ag_Crops + Ag_Wood + Ag_Livestock + Ag_Aquaculture + 
+              Ag_Livestock + Ag_Aquaculture + Energy_Oil + Energy_Mining +
+              Energy_Renewables + Trans_Roads + Trans_Utility + 
+              Bio_Hunting + Bio_Logging + Bio_Fishing + 
+              Human_Recreation + Human_Work + Natural_Fire + Natural_Dams + 
+              Natural_Other + Invasive_species_diseases + Problematic_native_species_diseases +
+              Problematic_unknown + Diseases_unknown +
+              Pollution_Water + Pollution_Agriculture + Pollution_Garbage +
+              Geological_Volcanoes + Geological_Avalanche + 
+              Climate_Habitat_shift + Climate_Drought + Climate_Temp_extreme + 
+              Climate_Storms + Climate_Other,family = binomial(link="logit"), data = march6)
+#Removed: Res_Tourism 
+#Human_War
+#Trans_Shipping
+#Trans_Flight
+#Bio_Gathering 
+#Pollution_Miliary 
+summary(glm8) #AIC = 5328, null deviance = 6151.1
+
+glm9 <- glm(status ~ Res_Housing + Res_Commercial + Res_Tourism +
+              Ag_Crops + Ag_Wood + Ag_Livestock + Ag_Aquaculture + 
+              Ag_Livestock + Ag_Aquaculture + Energy_Oil + Energy_Mining +
+              Energy_Renewables + Trans_Roads + Trans_Utility + 
+              Bio_Hunting + Bio_Logging + Bio_Fishing + 
+              Human_Recreation + Human_Work + Natural_Fire + 
+              Invasive_species_diseases + Problematic_native_species_diseases +
+              Problematic_unknown + Diseases_unknown +
+              Pollution_Water +
+              Geological_Volcanoes + Geological_Avalanche + 
+              Climate_Habitat_shift + Climate_Drought + Climate_Temp_extreme + 
+              Climate_Storms + Climate_Other,family = binomial(link="logit"), data = march6)
+#Removed: Res_Tourism 
+#Human_War
+#Trans_Shipping
+#Trans_Flight
+#Bio_Gathering 
+#Pollution_Miliary 
+#Natural Dams
+#Natural Other 
+#Pollution_Agriculture
+#Pollution_Garbage
+summary(glm9) #AIC = 5323.2, null deviance = 6151.1
+
+
+glm10 <- glm(status ~ Res_Housing + Res_Commercial + Res_Tourism +
+              Ag_Crops + Ag_Wood + Ag_Livestock + Ag_Aquaculture + 
+              Ag_Livestock + Ag_Aquaculture + Energy_Oil + Energy_Mining +
+              Energy_Renewables + Trans_Roads + Trans_Utility + 
+              Bio_Hunting + Bio_Logging + Bio_Fishing + 
+              Human_Recreation + Human_Work + Natural_Fire + 
+              Invasive_species_diseases + Problematic_native_species_diseases +
+              Problematic_unknown +
+              Pollution_Water +
+              Geological_Volcanoes + Geological_Avalanche + 
+              Climate_Habitat_shift + Climate_Drought + 
+              Climate_Storms + Climate_Other,family = binomial(link="logit"), data = march6)
+#Removed: Res_Tourism 
+#Human_War
+#Trans_Shipping
+#Trans_Flight
+#Bio_Gathering 
+#Pollution_Miliary 
+#Natural Dams
+#Natural Other 
+#Pollution_Agriculture
+#Pollution_Garbage
+#Climate_Temp_extreme
+#Diseases_unknown
+summary(glm10) #AIC = 5323.2, null deviance = 6151.1
 
 
 
+glm11 <- glm(status ~ Res_Housing + Res_Commercial +
+               Ag_Crops + Ag_Wood + Ag_Livestock + Ag_Aquaculture + 
+               Ag_Aquaculture + Energy_Oil + Energy_Mining +
+               Energy_Renewables + Trans_Roads + Trans_Utility + 
+               Bio_Hunting + Bio_Logging + Bio_Fishing + 
+               Human_Recreation + Human_Work + Natural_Fire + 
+               Invasive_species_diseases + Problematic_native_species_diseases +
+               Problematic_unknown +
+               Pollution_Water +
+               Geological_Volcanoes + Geological_Avalanche + 
+               Climate_Habitat_shift + Climate_Drought + 
+               Climate_Storms + Climate_Other,family = binomial(link="logit"), data = march6)
+#Removed: Res_Tourism 
+#Human_War
+#Trans_Shipping
+#Trans_Flight
+#Bio_Gathering 
+#Pollution_Miliary 
+#Natural Dams
+#Natural Other 
+#Pollution_Agriculture
+#Pollution_Garbage
+#Climate_Temp_extreme
+#Diseases_unknown
+#Res_Tourism 
+#Ag_Livestock 
+summary(glm11) #AIC = 5322, null deviance = 6151.1
+
+glm12 <- glm(status ~ Res_Housing + Res_Commercial +
+               Ag_Crops + Ag_Wood + Ag_Livestock + Ag_Aquaculture + 
+               Ag_Aquaculture + Energy_Mining +
+               Trans_Roads + Trans_Utility + 
+               Bio_Hunting + Bio_Logging + Bio_Fishing + 
+               Human_Recreation + Human_Work + Natural_Fire + 
+               Invasive_species_diseases + Problematic_native_species_diseases +
+               Problematic_unknown +
+               Pollution_Water +
+               Geological_Volcanoes + 
+               Climate_Habitat_shift + Climate_Drought + 
+               Climate_Storms + Climate_Other,family = binomial(link="logit"), data = march6)
+#Removed: Res_Tourism 
+#Human_War
+#Trans_Shipping
+#Trans_Flight
+#Bio_Gathering 
+#Pollution_Miliary 
+#Natural Dams
+#Natural Other 
+#Pollution_Agriculture
+#Pollution_Garbage
+#Climate_Temp_extreme
+#Diseases_unknown
+#Res_Tourism 
+#Ag_Livestock 
+#Geological avalanche 
+#Energy Renewables 
+#Energy oils 
+summary(glm12) #AIC = 5319.9, null deviance = 6151.1
+
+glm13 <- glm(status ~ Res_Housing + Res_Commercial +
+               Ag_Crops + Ag_Wood + 
+               Ag_Aquaculture + Energy_Mining +
+               Trans_Roads + Trans_Utility + 
+               Bio_Logging + Bio_Fishing + 
+               Human_Recreation + Natural_Fire + 
+               Invasive_species_diseases + Problematic_native_species_diseases +
+               Problematic_unknown +
+               Pollution_Water +
+               Geological_Volcanoes + 
+               Climate_Habitat_shift + Climate_Drought + 
+               Climate_Storms + Climate_Other,family = binomial(link="logit"), data = march6)
+#Removed: Res_Tourism 
+#Human_War
+#Trans_Shipping
+#Trans_Flight
+#Bio_Gathering 
+#Pollution_Miliary 
+#Natural Dams
+#Natural Other 
+#Pollution_Agriculture
+#Pollution_Garbage
+#Climate_Temp_extreme
+#Diseases_unknown
+#Res_Tourism 
+#Ag_Livestock 
+#Geological avalanche 
+#Energy Renewables 
+#Energy oils 
+#Ag_aquaculture 
+#Bio_hunting 
+#Human_work 
+summary(glm13) #AIC = 5316, null deviance = 6151.1
+
+glm14 <- glm(status ~ Res_Housing + Res_Commercial +
+               Ag_Crops + Ag_Wood + 
+               Energy_Mining +
+               Trans_Roads + Trans_Utility + 
+               Bio_Logging + Bio_Fishing + 
+               Human_Recreation + Natural_Fire + 
+               Invasive_species_diseases + 
+               Problematic_unknown +
+               Pollution_Water +
+               Geological_Volcanoes + 
+               Climate_Habitat_shift +  
+               Climate_Storms + Climate_Other,family = binomial(link="logit"), data = march6)
+#Removed: Res_Tourism 
+#Human_War
+#Trans_Shipping
+#Trans_Flight
+#Bio_Gathering 
+#Pollution_Miliary 
+#Natural Dams
+#Natural Other 
+#Pollution_Agriculture
+#Pollution_Garbage
+#Climate_Temp_extreme
+#Diseases_unknown
+#Res_Tourism 
+#Ag_Livestock 
+#Geological avalanche 
+#Energy Renewables 
+#Energy oils 
+#Ag_aquaculture 
+#Bio_hunting 
+#Human_work 
+summary(glm14) #AIC = 5315.1, null deviance = 6151.1
+
+###########
+glm15 <- glm(status ~ Res_Housing +
+               Ag_Crops + 
+               Energy_Mining +
+               Trans_Roads + Trans_Utility + 
+               Bio_Logging + 
+               Human_Recreation + Natural_Fire + 
+               Invasive_species_diseases + 
+               Problematic_unknown +
+               Pollution_Water +
+               Climate_Habitat_shift +  
+               Climate_Storms + Climate_Other,family = binomial(link="logit"), data = march6)
+#Removed: Res_Tourism 
+#Human_War
+#Trans_Shipping
+#Trans_Flight
+#Bio_Gathering 
+#Pollution_Miliary 
+#Natural Dams
+#Natural Other 
+#Pollution_Agriculture
+#Pollution_Garbage
+#Climate_Temp_extreme
+#Diseases_unknown
+#Res_Tourism 
+#Ag_Livestock 
+#Geological avalanche 
+#Energy Renewables 
+#Energy oils 
+#Ag_aquaculture 
+#Bio_hunting 
+#Human_work 
+summary(glm15) #AIC = 5329., null deviance = 6151.1
+              #took off stars with one significance, and the AIC went up 
 
 
 
+        #Need to reduce the variables that are not significant
+
+march7 <- march6
+march7$pop_trend <- all
 
 
+colnames(march6)
+
+#######
+
+march7 <- alldata
