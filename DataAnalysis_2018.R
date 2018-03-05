@@ -905,6 +905,7 @@ library("rredlist")
 library(RSQLite)
 library(sqldf)
 library(dplyr)
+require(plyr)
 require(ggplot2)
 require(reshape2)
 require(scales)
@@ -929,10 +930,21 @@ CR <- subset(alldata, alldata$Red.List.status == "CR")
 DD <- subset(alldata, alldata$Red.List.status == "DD")
 EN <- subset(alldata, alldata$Red.List.status == "EN")
 EW <- subset(alldata, alldata$Red.List.status == "EW")
-EX <- subset(alldata, alldata$Red.List.status == "LC")
+EX <- subset(alldata, alldata$Red.List.status == "EX")
 NT <- subset(alldata, alldata$Red.List.status == "NT")
 VU <- subset(alldata, alldata$Red.List.status == "VU")
+LC <- subset(alldata, alldata$Red.List.status == "LC")
 summary(alldata$Order)
+
+
+nrow(CR) #505
+nrow(DD) #1300
+nrow(EN) #775 
+nrow(EW) #2
+nrow(EX) #33
+nrow(NT) #354 
+nrow(VU) #617 
+nrow(LC) #2217 
 
 #Correlation HeatMap 
 
@@ -970,11 +982,178 @@ plot1 <- ggplot(dataMelt, aes(x=x, y=y)) + geom_tile (aes(fill = Correlation)) +
 
 class(alldata$Red.List.status)
 
-
-
 USArrests
+#Practice PCA: 
+# USArrests
+# pcal1 <- prcomp(USArrests, scale. = TRUE)
+# pcal1$rotation
+# scores <- as.data.frame(pcal1$x)
+# a <- ggplot(data = scores, aes(x = PC1, y = PC2, label = rownames(scores))) +
+#   geom_hline(yintercept = 0, colour = "gray65") +
+#   geom_vline(xintercept = 0, colour = "gray65") +
+#   geom_text(colour = "tomato", alpha = 0.8, size = 4) +
+#   ggtitle("PCA plot of USA States - Crime Rates")
+
 #Left off needing to find a way to GROUP my data
 # i want to group it by Red List Cateogry, Order, Genus 
+
+colnames(alldata)
+threatdf[,1] <- alldata$species_list
+threatdf <- alldata[,59:161]
+threatdf$species_list <- alldata$species_list
+threatdf$Redlist_status <- alldata$Red.List.status
+
+grouppings <- group_by(threatdf, Redlist_status)
+
+summary(grouppings)
+
+groupping <- ddply(threatdf, ~Redlist_status)
+groupping2 <- summarise(groupping, habitat = mean(R1.1))
+
+
+broad_threats <- select(alldata, species_list:C11.5, Red.List.status)
+broad_threats2 <- select(broad_threats, species_list, 
+                         R1.1:A2.1, A2.2, A2.3, A2.4, E3.1:B5.1, 
+                         B5.2, B5.3, B5.4, H6.1, H6.2, H6.3, 
+                         N7.1, N7.2, N7.3, I8.1, I8.2, I8.4, I8.5,
+                         I8.6, P9.1, P9.2, P9.3, P9.4, P9.5, G10.1, 
+                         G10.3, C11.1:Red.List.status)
+
+colnames(broad_threats2) <- c("species_list", "Res_Housing", "Res_Commercial",
+                              "Res_Tourism", "Ag_Crops", "Ag_Wood", "Ag_Livestock",
+                              "Ag_Aquaculture", "Energy_Oil", 
+                              "Energy_Mining", "Energy_Renewables", "Trans_Roads",
+                              "Trans_Utility", "Trans_Shipping", "Trans_Flight", 
+                              "Bio_Hunting", "Bio_Gathering", "Bio_Logging", "Bio_Fishing",
+                              "Human_Recreation", "Human_War", "Human_Work", "Natural_Fire",
+                              "Natural_Dams", "Natural_Other", "Invasive_species_diseases", 
+                              "Problematic_native_species_diseases", "Problematic_unknown", 
+                              "Viral-induced_diseases", "Diseases_unknown", "Pollution_Water",
+                              "Pollution_Military", "Pollution_Agriculture", "Pollution_Garbage",
+                              "Pollution_Air-borne", "Geological_Volcanoes", "Geological_Avalanche",
+                              "Climate_Habitat_shift", "Climate_Drought", "Climate_Temp_extreme",
+                              "Climate_Storms", "Climate_Other", "RedList_Status")
+
+      #Pulled out main columns (avoiding specifics) and renamed columns to be more informative 
+
+#####PCA: Threats by Red List status 
+broad_threats3 <- ddply(broad_threats2, ~ RedList_Status)
+tail(broad_threats3)
+length(broad_threats3)
+
+num <- c(2:42)
+for (i in num){
+  broad_threats3[,i] <- as.numeric(broad_threats3[,i])
+}
+class(withoutnames[,41])
+
+testing <- broad_threats3 %>% group_by(RedList_Status) %>% count(broad_threats3[,2:41])
+broad_threats4 <- select(broad_threats3, -species_list)
+testing <- aggregate(. ~ RedList_Status, broad_threats4, FUN = sum)
+
+
+
+
+y <- broad_threats4 %>%
+      group_by(RedList_Status) %>%
+      summarise_each(funs(sum))
+y <- as.data.frame(y)
+pca2 <- prcomp(y, scale. = TRUE)
+pca2$rotation
+
+rownames(y) <- y[,1]
+y[,1] <- NULL
+
+
+scores <- as.data.frame(pca2$x)
+b <- ggplot(data = scores, aes (x = PC1, y = PC2, label = rownames(scores))) +
+    geom_hline(yintercept = 0, colour = "gray65") +
+    geom_vline(xintercept = 0, colour = "gray65") +
+    geom_text(colour = "tomato", alpha = 0.8, size = 4) +
+    ggtitle("PCA plot of Threats by Red List Status")
+
+#########MCA where species = rownames and it is a bunch of dots and 
+###it is colored by the Red lsit status
+
+mca3 <- broad_threats2
+summary(mca3)
+rownames(mca3) <- mca3[,1]
+mca3[,1] <- NULL
+
+
+m1 <- MCA(mca3)
+res.mca <- MCA(mca3, graph = FALSE)
+print(res.ma)
+
+
+library("FactoMineR")
+library("factoextra")
+library(ggplot2)
+
+fviz_screeplot(res.mca, addlabels = TRUE, ylim = c(0, 45))
+var <- get_mca_var(res.mca)
+var$contrib
+#Correlation between variables and principle dimensions
+plot_1 <- fviz_mca_var(res.mca, choice = "mca.cor", 
+             repel = TRUE, # Avoid text overlapping (slow)
+             ggtheme = theme_minimal())
+
+
+      #The plot above helps to identify variables 
+      #that are the most correlated with each dimension.
+      #The squared correlations between variables and the
+      #dimensions are used as coordinates.
+
+      #It can be seen that, the variables Res_Housing, Ag_Livestock, RedList_Status
+      #Res_Housing are most correlatied Dim1 (6.9%)
+      #Dim2 = Geological Avalanche and climate storms 
+
+
+plot_2 <- fviz_mca_var(res.mca, 
+             repel = TRUE, # Avoid text overlapping (slow)
+             ggtheme = theme_minimal())
+
+ind <- get_mca_ind(res.mca)
+plot_3 <- fviz_mca_ind(res.mca, col.ind = "cos2", 
+                       gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+                       repel = TRUE, # Avoid text overlapping (slow if many points)
+                       ggtheme = theme_minimal())
+
+
+
+
+##################
+##LITERALLY TERRIBLE at explaining the variation in the data 
+tryagain <- select(alldata, species_list, Order, Family, Genus, Red.List.status,
+                   Population.trend)
+rownames(tryagain) <- tryagain[,1]
+tryagain[,1] <- NULL
+
+
+m2 <- MCA(tryagain)
+res.mca2 <- MCA(tryagain, graph = FALSE)
+print(res.mca2)
+
+
+library("FactoMineR")
+library("factoextra")
+library(ggplot2)
+
+fviz_screeplot(res.mca, addlabels = TRUE, ylim = c(0, 45))
+var <- get_mca_var(res.mca)
+var$contrib
+#Correlation between variables and principle dimensions
+plot_1 <- fviz_mca_var(res.mca, choice = "mca.cor", 
+                       repel = TRUE, # Avoid text overlapping (slow)
+                       ggtheme = theme_minimal())
+
+########################################
+#LOGISTIC REGRESSION UP 
+
+
+
+
+
 
 
 
