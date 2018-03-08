@@ -1469,14 +1469,120 @@ summary(glm15) #AIC = 5329., null deviance = 6151.1
 
 
 
-        #Need to reduce the variables that are not significant
+fos <- ifelse(is.na(alldata$Fos) == TRUE, 0, 1) 
+ter <- ifelse(is.na(alldata$Ter) == TRUE, 0, 1)
+aqu <- ifelse(is.na(alldata$Aqu) == TRUE, 0, 1)
+arb <- ifelse(is.na(alldata$Arb) == TRUE, 0, 1)
+species <- alldata$species_list
+status <- alldata$Red.List.status
 
-march7 <- march6
-march7$pop_trend <- all
+
+amph_habitats <- data.frame(species, status, fos, ter, aqu, arb)
+amph_habitats$threatened <- ifelse(amph_habitats$status == 'NT'| amph_habitats$status == 'LC', 
+                                    "Not Threatened", "Threatened")
+amph_habitats$threatened <- as.factor(amph_habitats$threatened)
+amph_habitats$threatened <- ifelse(amph_habitats$threatened == "Threatened", 1, 0)
+
+amph_habitats <- amph_habitats %>% filter(status != "EX")
+amph_habitats <- amph_habitats %>% filter(status != "EW")
+amph_habitats <- amph_habitats %>% filter(status != 'DD')
+
+amph_habitats <- as.data.frame(amph_habitats)
+hab1 <- glm(threatened ~ fos + ter + aqu + arb, data = amph_habitats)
+summary(hab1)
 
 
-colnames(march6)
 
-#######
 
-march7 <- alldata
+
+
+
+
+march6$fos <- amph_habitats$fos
+march6$ter <- amph_habitats$ter
+march6$aqu <- amph_habitats$aqu
+march6$arb <- amph_habitats$arb
+
+
+
+
+com1 <- glm(status ~ Res_Housing + Res_Commercial +
+               Ag_Crops + Ag_Wood + 
+               Energy_Mining +
+               Trans_Roads + Trans_Utility + 
+               Bio_Logging + Bio_Fishing + 
+               Human_Recreation + Natural_Fire + 
+               Invasive_species_diseases + 
+               Problematic_unknown +
+               Pollution_Water +
+               Geological_Volcanoes + 
+               Climate_Habitat_shift +  
+               Climate_Storms + Climate_Other + fos + ter + aqu + arb,family = binomial(link="logit"), data = march6)
+#Removed: Res_Tourism 
+#Human_War
+#Trans_Shipping
+#Trans_Flight
+#Bio_Gathering 
+#Pollution_Miliary 
+#Natural Dams
+#Natural Other 
+#Pollution_Agriculture
+#Pollution_Garbage
+#Climate_Temp_extreme
+#Diseases_unknown
+#Res_Tourism 
+#Ag_Livestock 
+#Geological avalanche 
+#Energy Renewables 
+#Energy oils 
+#Ag_aquaculture 
+#Bio_hunting 
+#Human_work 
+summary(com1) #AIC = 5220.7, null deviance = 6151.1
+
+
+
+#####PCA: Habiat by Red List status 
+amph_habitats
+
+
+
+broad_threats13 <- select(amph_habitats, -threatened)
+tail(broad_threats13)
+length(broad_threats13)
+
+num <- c(3:6)
+for (i in num){
+  broad_threats13[,i] <- as.numeric(broad_threats13[,i])
+}
+
+broad_threats13$status <- as.factor(broad_threats13$status)
+testing13 <- broad_threats13 %>% group_by(status) 
+
+broad_threats14 <- select(broad_threats13, -species)
+testing15 <- aggregate(. ~ status, broad_threats14, FUN = sum)
+
+
+
+
+ag1 <- broad_threats13 %>% group_by(status) %>% summarise_each(funs(sum))
+ag1 <- 
+  
+  y1 <- broad_threats14 %>%
+  group_by(status) %>%
+  summarise_each(funs(sum))
+
+y1 <- as.data.frame(y1)
+pca5 <- prcomp(y1, scale. = TRUE)
+pca5$rotation
+
+rownames(y1) <- y1[,1]
+y1[,1] <- NULL
+
+
+scores <- as.data.frame(pca5$x)
+b1 <- ggplot(data = scores, aes (x = PC1, y = PC2, label = rownames(scores))) +
+  geom_hline(yintercept = 0, colour = "gray65") +
+  geom_vline(xintercept = 0, colour = "gray65") +
+  geom_text(colour = "tomato", alpha = 0.8, size = 4) +
+  ggtitle("PCA plot of Habitats by Red List Status")
