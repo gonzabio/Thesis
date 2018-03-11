@@ -2186,8 +2186,4 @@ mean_is_zero<- as.data.frame(mean_is_zero)
 require(rgdal)
 library(maptools)
 
-getwd()
-crswgs84 <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
-shapefile <- readShapePoly(file.choose())
-spatial_iucn <- as.data.frame(shapefile)
 
