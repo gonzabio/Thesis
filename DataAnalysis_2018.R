@@ -214,6 +214,10 @@ amphiBIO$a_Species <- amphiBIO$Species
 amphiBIO <- select(amphiBIO, -Species)
 
 
+is.element("Leptodactylus diptyx", amphiBIO$a_Species)
+
+rl_synonyms("Leptodactylus diptyx", key = token)
+
 class(amphiBIO$a_Species)
 class(iucn_data$Species)
 
@@ -2141,5 +2145,49 @@ se_asian2$species_list <- as.character(se_asian2$species_list)
 full_se_data <- inner_join(se_asian2, threat_data2, by = "species_list")
 colnames(full_se_data)
 
+summary(full_se_data$Red.List.status)
+# CR  DD  EN  EX  LC  NT  VU 
+# 40 266 112  20 303  72 118 
+40 + 266 + 112 + 20 + 202 + 72 
+266/712*100
+#60% of exticnt species are in southest 
 
+
+
+
+
+summary(combined_df$Red.List.status)
+# CR   DD   EN   EW   EX   LC   NT   VU 
+# 505 1300  775    2   33 2271  354  617 
+
+505 + 1300 + 775 + 2 + 33 + 2271 + 354 + 617
+1300/5857*100
+plot(combined_df$Red.List.status)
+
+
+
+
+
+
+
+
+
+summary(full_se_data)
+
+mean_is_zero <- lapply(full_se_data[,59:161], mean)
+class(mean_is_zero)
+as.vector(mean_is_zero)
+
+mean_is_zero<- as.data.frame(mean_is_zero)
+
+
+
+
+require(rgdal)
+library(maptools)
+
+getwd()
+crswgs84 <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
+shapefile <- readShapePoly(file.choose())
+spatial_iucn <- as.data.frame(shapefile)
 
