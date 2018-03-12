@@ -2149,7 +2149,7 @@ summary(full_se_data$Red.List.status)
 # CR  DD  EN  EX  LC  NT  VU 
 # 40 266 112  20 303  72 118 
 40 + 266 + 112 + 20 + 202 + 72 
-266/712*100
+266/712*100 #37% 
 #60% of exticnt species are in southest 
 
 
@@ -2176,14 +2176,59 @@ summary(full_se_data)
 
 mean_is_zero <- lapply(full_se_data[,59:161], mean)
 class(mean_is_zero)
-as.vector(mean_is_zero)
+ifelse(mean_is_zero == 0, "yes", "no")
+#E3.1    Energy Oil and gas drilling 
+#T4.3 (transportation) 
+#T4.4
+#B5.1.2 (Biological and resource use, fishing and harvesting of aquatic resources)
+#B5.4.1 
+#B5.4.4
+#N7.1.2 (fire and fire suppression)
+#N7.2.1 
+#N7.2.4 
+#N7.2.5
+#N7.2.6
+#N7.2.7
+#N7.2.8
+#N7.2.9
+#I8.2.1 #Invasive - problematic 
+#I8.2.2
+#I8.4.2 #Invasive - problematic species/disease 
+#I8.5   #Invasive - viral 
+#I8.5.1
+#I8.5.2
+#I8.6   #Diseases of unknown cause 
+#P9.2.1 #industrial/militarty effluents 
+#P9.3.1 #agriculture and forestry effluencts 
+#P9.5   #air-born pollutants
+#P9.5.1 #acid rain 
+#P9.5.2 #smog 
+#P9.5.3 #ozone 
+#P9.5.4 #type unknown 
+#G10.3  #Avalanche/landslides 
 
-mean_is_zero<- as.data.frame(mean_is_zero)
+
+
+
+acid_rain <- sqldf("SELECT * FROM combined_df WHERE 'E3.1' == 1")
+ifelse(full_se_data$E3.1 == 1, "yes", "no")
+
+acid_rain <- alldata %>% filter(alldata$P9.5.1 == 1)
+smog <- alldata%>% filter(alldata$P9.5.2 == 1)
+ozone <- alldata%>% filter(alldata$P9.5.3 == 1)
+colnames(alldata)
+rl_threats(name = "Prostherapis dunni", key = token)
 
 
 
 
-require(rgdal)
-library(maptools)
 
+########South American Amphibians 
+
+getwd()
+setwd("/Users/Alexandra_Gonzalez/Downloads")
+south_america_amph <- read.csv("export-89559.csv", header = TRUE)
+summary (south_america_amph$Red.List.status)
+# 169 + 734 + 241 + 4 + 934 + 113 + 223
+# 734/2418 = 30%
 
