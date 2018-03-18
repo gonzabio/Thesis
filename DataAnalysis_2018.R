@@ -2173,10 +2173,15 @@ plot(combined_df$Red.List.status)
 
 
 summary(full_se_data)
+write.csv(full_se_data, file = "SE_Asia_Amphibians.csv")
 
 mean_is_zero <- lapply(full_se_data[,59:161], mean)
 class(mean_is_zero)
 ifelse(mean_is_zero == 0, "yes", "no")
+
+full_se_data$Genus <- as.factor(full_se_data$Genus)
+summary(full_se_data$Genus)
+
 #E3.1    Energy Oil and gas drilling 
 #T4.3 (transportation) 
 #T4.4
@@ -2220,9 +2225,10 @@ colnames(alldata)
 rl_threats(name = "Prostherapis dunni", key = token)
 
 
+summary(full_se_data)
 
-
-
+library(rredlist)
+rl_threats ("Duttaphrynus melanostictus", key = token)
 ########South American Amphibians 
 
 getwd()
