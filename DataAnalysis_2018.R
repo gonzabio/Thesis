@@ -2166,8 +2166,7 @@ plot(combined_df$Red.List.status)
 
 
 
-
-
+Alytesobstertricans <- alldata[alldata$species_list == "Alytes obstetricans",]
 
 
 
@@ -2237,4 +2236,40 @@ south_america_amph <- read.csv("export-89559.csv", header = TRUE)
 summary (south_america_amph$Red.List.status)
 # 169 + 734 + 241 + 4 + 934 + 113 + 223
 # 734/2418 = 30%
+
+
+
+
+
+
+#########Show missing data using MICE
+#install.packages("mice")
+#install.packages("VIM")
+library(mice)
+library(VIM)
+mice_Test <- md.pattern(full_se_data)
+missing_habitats <- full_se_data[,26:29]
+aggr_plot <- aggr(missing_habitats, col=c('navyblue','red'),
+                  numbers=TRUE, sortVars=TRUE, 
+                  labels=names(missing_habitats), 
+                  cex.axis=.7, gap=3, 
+                  ylab=c("Histogram of missing habitat data (AmphiBio)","Pattern"))
+
+
+sapply(full_se_data, function(x) sum(is.na(x)))
+full_se_data[,26] #fos
+full_se_data[,58]
+missing_se_data <- full_se_data[,29:58]
+md.pattern(missing_se_data)
+
+# fos = fossorial (burrow)
+# ter = terrestrial (ground)
+# aqu = aquatic (freshwater)
+# arb = arboreal (trees)
+
+
+
+
+
+
 
