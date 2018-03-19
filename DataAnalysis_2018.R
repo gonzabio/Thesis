@@ -2248,28 +2248,125 @@ summary (south_america_amph$Red.List.status)
 library(mice)
 library(VIM)
 mice_Test <- md.pattern(full_se_data)
+md.pattern(missing_habitats)
 missing_habitats <- full_se_data[,26:29]
 aggr_plot <- aggr(missing_habitats, col=c('navyblue','red'),
                   numbers=TRUE, sortVars=TRUE, 
                   labels=names(missing_habitats), 
                   cex.axis=.7, gap=3, 
-                  ylab=c("Histogram of missing habitat data (AmphiBio)","Pattern"))
-
-
-sapply(full_se_data, function(x) sum(is.na(x)))
-full_se_data[,26] #fos
-full_se_data[,58]
-missing_se_data <- full_se_data[,29:58]
-md.pattern(missing_se_data)
-
+                  ylab=c("Proportion of Habitat Data Missingness","Missingness Pattern"))
 # fos = fossorial (burrow)
 # ter = terrestrial (ground)
 # aqu = aquatic (freshwater)
 # arb = arboreal (trees)
+      #RESULTS: 
+      #Using MICE and VIM packages, this creates a histogram of missing data 
+      #and then shows the pattern 
+      #having trouble in the interpretation of it tho 
+      #http://web.maths.unsw.edu.au/~dwarton/missingDataLab.html (see this website for interpretation)
+
+library(rredlist)
+rl_threats("Adenomus dasi", key = token)
 
 
 
+full_se_data$species_list[1:10]
+not_ongoing <- function(species_list){
+  notgood <- vector (length = length(species_list), mode = "character")
+  i <- 1 
+  for (species in species_list){
+    threats <- rl_threats(species, key = token)
+    code <- threats$result$code
+    timing <- threats$result$timing
+    if ("Unknown" %in% timing == TRUE){
+      notgood[i] <- "Unknown"
+    } else if ("Past" %in% timing == TRUE){
+      notgood[i] <- "Past" 
+    } else if ("Future" %in% timing == TRUE){
+      notgood[i] <- "Future" 
+    } else if ("Past, Likely to Return" %in% timing == TRUE){
+      notgood[i] <- "Past, Likely to Return" 
+    } else if (isTRUE(all.equal("Ongoing",timing) == FALSE)){
+      notgood[i] <- "Other"
+    } else {
+      notgood[i] <- "NA"
+    }
+    i <- i + 1 
+  }
+  whatsup <- data.frame(species_list, notgood) 
+  return(whatsup)
+}
+
+# not_ongoing <- function(species_list){
+#   # unknown <- vector(length = length(species_list), mode = "character")
+#   # past <- vector (length = length(species_list), mode = "character")
+#   # future <- vector (length = length(species_list), mode = "character")
+#   # i <- 1 
+#   for (species in species_list){
+#     threats <- rl_threats(species, key = token)
+#     code <- threats$result$code
+#     timing <- threats$result$timing
+#     if ("Unknown" %in% timing == TRUE){
+#       # unknown[i] <- species
+#       print("Unknown")
+#     } if ("Past" %in% timing == TRUE){
+#       # past[i] <- species 
+#       print ("Past")
+#     } if ("Future" %in% timing == TRUE){
+#       # future[i] <- species 
+#       print ("Future")
+#     } else {
+#       print("yo")
+#       i <- i + 1
+#     }
+#   }
+# }
+# 
+
+      
+      
+      
+#     }
+#     i <- i + 1
+#   }
+#   species_with_issues <- data.frame(unknown, past, future)
+# }
 
 
+testsubjects <- c("Adenomus dasi", "Theloderma asperum", "Adelastes hylonomos")
+practice1 <- not_ongoing(full_se_data$species_list[1:10]) 
+practice2 <- not_ongoing(full_se_data$species_list[11:30])
+practice3 <- not_ongoing(full_se_data$species_list[31:100])
+practice4 <- not_ongoing(full_se_data$species_list[101:150])
+practice5 <- not_ongoing(full_se_data$species_list[151:250])
+practice6 <- not_ongoing(full_se_data$species_list[251:350])
+practice7 <- not_ongoing(full_se_data$species_list[351:450])
+practice8 <- not_ongoing(full_se_data$species_list[451:600])
+practice9 <- not_ongoing(full_se_data$species_list[601:750])
+practice10 <- not_ongoing(full_se_data$species_list[751:900])
+practice11 <- not_ongoing(full_se_data$species_list[901:931])
+practice12 <- not_ongoing(full_se_data$species_list[1:500])
+summary(full_se_data)
+
+testsubject2 <- rl_threats("Platymantis banahao", key = token)
+
+"Past, Likely to Return" %in% testsubject2$result$timing  
+isTRUE(all.equal("Ongoing", testsubject2))
+    
+    
+rl_threats("Phyllobates terribilis", key = token)
+
+#df of species and threat codes 
+
+threat$result$code[i] 
+threat$result$timing[i] 
 
 
+i <-1 
+for (i in timing[i]){
+  past <- timing[i] 
+}
+
+
+practice <- rl_threats("Adenomus dasi", key = token) 
+practice$result$code
