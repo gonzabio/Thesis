@@ -1158,6 +1158,7 @@ plot_1 <- fviz_mca_var(res.mca, choice = "mca.cor",
 
 ########################################
 #LOGISTIC REGRESSION UP 
+library(dplyr)
 march4 <- broad_threats2
 
 
@@ -2272,6 +2273,10 @@ rl_threats("Adenomus dasi", key = token)
 
 full_se_data$species_list[1:10]
 not_ongoing <- function(species_list){
+  #Purpose: Creates a dataframe with species as one column 
+  #and threat timing in the other column. 
+  #Species_list = Vector of species where class = character
+  
   notgood <- vector (length = length(species_list), mode = "character")
   i <- 1 
   for (species in species_list){
@@ -2346,27 +2351,85 @@ practice9 <- not_ongoing(full_se_data$species_list[601:750])
 practice10 <- not_ongoing(full_se_data$species_list[751:900])
 practice11 <- not_ongoing(full_se_data$species_list[901:931])
 practice12 <- not_ongoing(full_se_data$species_list[1:500])
-summary(full_se_data)
+
+past_future_threats <- rbind(practice1, practice2, practice3, 
+                             practice4, practice5, practice6,
+                             practice7, practice8, practice9, 
+                             practice10, practice11, practice12)
+
+
+remove <- sqldf("SELECT species_list,notgood FROM past_future_threats 
+                WHERE notgood!= 'NA' ")
+
 
 testsubject2 <- rl_threats("Platymantis banahao", key = token)
 
 "Past, Likely to Return" %in% testsubject2$result$timing  
 isTRUE(all.equal("Ongoing", testsubject2))
     
-    
-rl_threats("Phyllobates terribilis", key = token)
-
-#df of species and threat codes 
-
-threat$result$code[i] 
-threat$result$timing[i] 
+#Density distribution plot 
+  #Want to see if there is a differnce when SE Asian Amphibains are considered 
 
 
-i <-1 
-for (i in timing[i]){
-  past <- timing[i] 
-}
+library(sqldf)
+library(ggplot2)
+terrestrial_body <- sqldf("SELECT `Red.List.status`, Body_size_mm FROM full_se_data")
+class(terrestrial_body$Red.List.status)
+terrestrial_body$Ter <- as.factor(terrestrial_body$Ter)
+p <- ggplot(terrestrial_body, aes(x = Body_size_mm, color = Red.List.status)) +
+            geom_density()
 
 
-practice <- rl_threats("Adenomus dasi", key = token) 
-practice$result$code
+body_size_threat <- sqldf("SELECT  Body_size_mm,`Order`,`A2.1`  FROM full_se_data ")
+body_size_threat$Order <- as.factor(body_size_threat$Order)
+body_size_threat$A2.1 <- as.factor(body_size_threat$A2.1)
+q <- ggplot(body_size_threat, aes(x = Body_size_mm, color = Order)) +
+  geom_density()
+
+datadeficient <- sqldf("SELECT * FROM full_se_data WHERE full_se_data$Red.List.status == 'DD'")
+library(dplyr)
+datadeficient <- filter(full_se_data, Red.List.status == "DD")
+q <- ggplot(body_size_threat, aes(x = Body_size_mm, color = Order)) +
+  geom_density()
+q1 <- ggplot(body_size_threat, aes(x = Body_size_mm, color = `A2.1`)) +
+  geom_density()
+class(full_se_data$R1.1)
+
+###################
+
+#logistic regressions 
+res_threats <- glm(full_se_data$R1.1 ~ full_se_data$Ter,family = binomial(link="logit"), data = full_se_data)
+body_size <- lm(full_se_data$Body_size_mm ~ full_se_data$R1.1 + full_se_data$R1.2
+                + full_se_data$R1.3 + full_se_data$A2.1 + full_se_data$Fos
+                + full_se_data$Ter, data = full_se_data)
+summary(body_size)
+
+not_na <- sqldf("SELECT * FROM full_se_data WHERE is.na == FALSE")
+
+
+
+#Exploratory data analysis 
+#results of logistic regression 
+
+glm15 <- glm(status ~ Res_Housing +
+               Ag_Crops + 
+               Energy_Mining +
+               Trans_Roads + Trans_Utility + 
+               Bio_Logging + 
+               Human_Recreation + Natural_Fire + 
+               Invasive_species_diseases + 
+               Problematic_unknown +
+               Pollution_Water +
+               Climate_Habitat_shift +  
+               Climate_Storms + Climate_Other,family = binomial(link="logit"), data = march6)
+
+
+glm_test <- glm(full_se_data$Fos ~ ., family = binomial(link="logit"), data = full_se_data)
+what <- ifelse(is.na(full_se_data$Fos == "NA") == TRUE, 0, full_se_data$Fos) 
+tail(full_se_data$Fos)
+
+
+
+
+
+
