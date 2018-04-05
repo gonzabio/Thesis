@@ -2430,57 +2430,7 @@ tail(full_se_data$Fos)
 
 
 
-#### Need to see the impacts 
-library(rredlist)
-
-not_ongoing <- function(species_list){
-  #Purpose: Creates a dataframe with species as one column 
-  #and threat timing in the other column. 
-  #Species_list = Vector of species where class = character
-  
-  notgood <- vector (length = length(species_list), mode = "character")
-  i <- 1 
-  for (species in species_list){
-    threats <- rl_threats(species, key = token)
-    code <- threats$result$code
-    timing <- threats$result$timing
-    if ("Unknown" %in% timing == TRUE){
-      notgood[i] <- "Unknown"
-    } else if ("Past" %in% timing == TRUE){
-      notgood[i] <- "Past" 
-    } else if ("Future" %in% timing == TRUE){
-      notgood[i] <- "Future" 
-    } else if ("Past, Likely to Return" %in% timing == TRUE){
-      notgood[i] <- "Past, Likely to Return" 
-    } else if (isTRUE(all.equal("Ongoing",timing) == FALSE)){
-      notgood[i] <- "Other"
-    } else {
-      notgood[i] <- "NA"
-    }
-    i <- i + 1 
-  }
-  whatsup <- data.frame(species_list, notgood) 
-  return(whatsup)
-}
-
-head(no_dd)
-question <- rl_threats("Adenomus kandianus", key = token)
-class(question)
-question1 <- rl_threats("Adenomus kelaartii", key = token)
-question2 <- rl_threats("Allopaa hazarensis", key = token)
-question3 <- rl_threats("Amolops archotaphus", key = token)
-
-class(question1$result)
-testing1 <- question1$result
-testing2 <- question2$result
-testing3 <- rbind(testing1,testing2)
-
-
-
-question1$result$score
-    #do a for loop - accumulate the result 
-    #accumulate the result dataframe
-
+#########################
 
 threat_details <- function(species_list){
   datalist <- list()
@@ -2530,18 +2480,11 @@ threat_specifics <- rbind(set1,set2, set3, set4, set5, set6,
                           set7, set8, set9, set10, set11, set12, 
                           set13, set14, set15)
 
-nrow(full_se_data)
-
-rl_threats("Amolops splendissimus", key = token)
-colnames(set1)
-head5 <- head(no_dd)
-only <- head$new_species
-only <- as.character(only)
-yuh <- tail(no_dd$species_list)
-head2 <- score(only)
-class(full_se_data$sp)
-head2$score
-ifelse(head2$code == thirdlevel, TRUE, FALSE)
-
 library(dplyr)
-filter(head2, !(code %in% thirdlevel))  # equivalently, dat %>% filter(name %in% target)
+library(sqldf)
+low_impact <- sqldf("SELECT * threat_specifics WHERE score == 'Low Impact: 3' ")
+
+class(threat_specifics$code)
+threat_specifics$timing <- as.factor(threat_specifics$timing)
+threat_specifics[] <- lapply(threat_specifics, as.factor)
+summary(threat_specifics)
