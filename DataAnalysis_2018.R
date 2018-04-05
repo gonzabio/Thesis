@@ -2430,6 +2430,102 @@ tail(full_se_data$Fos)
 
 
 
+#### Need to see the impacts 
+library(rredlist)
+
+not_ongoing <- function(species_list){
+  #Purpose: Creates a dataframe with species as one column 
+  #and threat timing in the other column. 
+  #Species_list = Vector of species where class = character
+  
+  notgood <- vector (length = length(species_list), mode = "character")
+  i <- 1 
+  for (species in species_list){
+    threats <- rl_threats(species, key = token)
+    code <- threats$result$code
+    timing <- threats$result$timing
+    if ("Unknown" %in% timing == TRUE){
+      notgood[i] <- "Unknown"
+    } else if ("Past" %in% timing == TRUE){
+      notgood[i] <- "Past" 
+    } else if ("Future" %in% timing == TRUE){
+      notgood[i] <- "Future" 
+    } else if ("Past, Likely to Return" %in% timing == TRUE){
+      notgood[i] <- "Past, Likely to Return" 
+    } else if (isTRUE(all.equal("Ongoing",timing) == FALSE)){
+      notgood[i] <- "Other"
+    } else {
+      notgood[i] <- "NA"
+    }
+    i <- i + 1 
+  }
+  whatsup <- data.frame(species_list, notgood) 
+  return(whatsup)
+}
+
+head(no_dd)
+question <- rl_threats("Adenomus kandianus", key = token)
+class(question)
+question1 <- rl_threats("Adenomus kelaartii", key = token)
+question2 <- rl_threats("Allopaa hazarensis", key = token)
+question3 <- rl_threats("Amolops archotaphus", key = token)
+
+class(question1$result)
+testing1 <- question1$result
+testing2 <- question2$result
+testing3 <- rbind(testing1,testing2)
 
 
 
+question1$result$score
+    #do a for loop - accumulate the result 
+    #accumulate the result dataframe
+
+
+threat_details <- function(species_list){
+  datalist <- list()
+  i <- 1 
+  for (species in species_list){
+    threats <- rl_threats(species, key = token)
+    df1 <- threats$result
+    df1$species_name <- species 
+    datalist[[i]] <- df1
+    i <- i + 1 
+  }
+  thirdlevel <- c("2.1.1", "2.1.2", "2.1.3", "2.1.4", "2.2.1", "2.2.2", "2.2.3",
+                  "2.3.1", "2.3.2", "2.3.3", "2.3.4", "2.4.1", "2.4.2", "2.4.3", 
+                  "5.1.1", "5.1.2", "5.1.3", "5.1.4", "5.2.1", "5.2.2", "5.2.3",
+                  "5.2.4", "5.3.1", "5.3.2", "5.3.3", "5.3.4", "5.3.5", "5.4.1",
+                  "5.4.2", "5.4.3", "5.4.4", "5.4.5", "5.4.6", "7.1.1", "7.1.2",
+                  "7.1.3", "7.2.1", "7.2.2", "7.2.3", "7.2.4", "7.2.5", "7.2.6",
+                  "7.2.7", "7.2.8", "7.2.9", "7.2.10", "7.2.11", "8.1.1", "8.1.2",
+                  "8.2.1", "8.2.2", "8.4.1", "8.4.2", "8.5.1", "8.5.2", "9.1.1",
+                  "9.1.2", "9.1.3", "9.2.1", "9.2.2", "9.2.3", "9.3.1", "9.3.2", 
+                  "9.3.3", "9.3.4", "9.5.1")
+  library(dplyr)
+  big_data <- dplyr::bind_rows(datalist)
+  big_data <- as.data.frame(big_data)
+  final <- filter(big_data, !(code %in% thirdlevel))
+  reordered <- final[,c("code","title","timing","scope","severity","score","invasive","species_name")]
+  return(reordered)
+}
+
+set1 <- threat_details(full_se_data$species_list[1:5]) 
+set2 <- threat_details(full_se_data$species_list[6:10])
+set3 <- threat_details(full_se_data$species_list[11:14])
+set4 <- threat_details(full_se_data$species_list[15:30])
+
+
+rl_threats("Amolops splendissimus", key = token)
+colnames(set1)
+head5 <- head(no_dd)
+only <- head$new_species
+only <- as.character(only)
+yuh <- tail(no_dd$species_list)
+head2 <- score(only)
+class(full_se_data$sp)
+head2$score
+ifelse(head2$code == thirdlevel, TRUE, FALSE)
+
+library(dplyr)
+filter(head2, !(code %in% thirdlevel))  # equivalently, dat %>% filter(name %in% target)
