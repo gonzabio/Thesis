@@ -2514,7 +2514,23 @@ set1 <- threat_details(full_se_data$species_list[1:5])
 set2 <- threat_details(full_se_data$species_list[6:10])
 set3 <- threat_details(full_se_data$species_list[11:14])
 set4 <- threat_details(full_se_data$species_list[15:30])
+set5 <- threat_details(full_se_data$species_list[31:70])
+set6 <- threat_details(full_se_data$species_list[71:140])
+set7 <- threat_details(full_se_data$species_list[141:200])
+set8 <- threat_details(full_se_data$species_list[201:300])
+set9 <- threat_details(full_se_data$species_list[301:400])
+set10 <- threat_details(full_se_data$species_list[401:500])
+set11 <- threat_details(full_se_data$species_list[501:600])
+set12 <- threat_details(full_se_data$species_list[601:700])
+set13 <- threat_details(full_se_data$species_list[701:800])
+set14 <- threat_details(full_se_data$species_list[801:900])
+set15 <- threat_details(full_se_data$species_list[901:931])
 
+threat_specifics <- rbind(set1,set2, set3, set4, set5, set6,
+                          set7, set8, set9, set10, set11, set12, 
+                          set13, set14, set15)
+
+nrow(full_se_data)
 
 rl_threats("Amolops splendissimus", key = token)
 colnames(set1)
