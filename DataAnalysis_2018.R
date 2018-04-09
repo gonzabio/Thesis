@@ -763,6 +763,7 @@ threat_data2 <- select(threat_data, -A2.4.1, -B5.1.4, -B5.2.1, -B5.2.3, -B5.4.2,
 summary(threat_data2)
 
 library(dplyr)
+citation(package = "dplyr")
 
 #Change to factor 
 combined_df$Phylum <- as.factor(combined_df$Phylum)
@@ -2459,7 +2460,9 @@ threat_details <- function(species_list){
   reordered <- final[,c("code","title","timing","scope","severity","score","invasive","species_name")]
   return(reordered)
 }
+summary(set1)
 
+class(full_se_data$species_list[1:5])
 set1 <- threat_details(full_se_data$species_list[1:5]) 
 set2 <- threat_details(full_se_data$species_list[6:10])
 set3 <- threat_details(full_se_data$species_list[11:14])
@@ -2488,3 +2491,26 @@ class(threat_specifics$code)
 threat_specifics$timing <- as.factor(threat_specifics$timing)
 threat_specifics[] <- lapply(threat_specifics, as.factor)
 summary(threat_specifics)
+
+
+
+library(ggplot2)
+c1 <- ggplot(data = threat_specifics, aes(x = threat_specifics$title, fill = score)) + 
+            geom_bar(stat = "count", width=0.7)+
+            theme_minimal() + 
+            theme(axis.text.x = element_text(angle = 60, hjust = 1, size = 5)) +
+            coord_flip() + 
+            xlab(label = "Threat") + 
+            ylab(label = "Count")
+c2 <- ggplot(data = threat_specifics, aes(x = threat_specifics$scope, fill = threat_specifics$score)) + 
+  geom_bar(stat = "count", width=0.7)+
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 60, hjust = 1, size = 5))
+
+
+
+summary(threat_specifics)
+
+class(threat_specifics$species_name)
+
+library(rredlist)
