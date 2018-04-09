@@ -578,7 +578,7 @@ a8 <- glm(amph_test$threatened ~ amph_test$Lar + amph_test$Viv, data = amph_test
 summary(a8)
 summary(amph_test$Lar)
 
-
+summary(no_dd)
 
 
 
