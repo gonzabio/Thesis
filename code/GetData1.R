@@ -150,7 +150,7 @@ ex <- clean_data2(EXX)
 
 ####BETTER WAY 
 ####Need to edit this ~~~~~~~~~ 
-#sp_threat_count <- function(species_list){
+sp_threat_count <- function(species_list){
   threat_count <- vector(length = length(species_list), mode = "character")
   i <- 1
   for (species in species_list){
