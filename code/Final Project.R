@@ -23,7 +23,7 @@ token <- "cf51b7524f618f5b23220e687b70c01d0d240cc82d179cf2c5b08b70fdfb83d4"
 ######## Functions(1/2): Preprocessing, amphibians only, species only, threat count 
 ########
 
-clean_data2 <- function(species_list){
+sp_only <- function(species_list){
   #parameter name is confusing - takes a list of everything, 
   #returns species. filters out subpopulations, rank, etc. 
   df<- as.data.frame(species_list)
@@ -111,12 +111,22 @@ sp_threat_count <- function(species_list){
   # generates threat count for each species in the list 
   threat_count <- vector(length = length(species_list), mode = "character")
   i <- 1
+  thirdlevel <- c("2.1.1", "2.1.2", "2.1.3", "2.1.4", "2.2.1", "2.2.2", "2.2.3",
+                  "2.3.1", "2.3.2", "2.3.3", "2.3.4", "2.4.1", "2.4.2", "2.4.3", 
+                  "5.1.1", "5.1.2", "5.1.3", "5.1.4", "5.2.1", "5.2.2", "5.2.3",
+                  "5.2.4", "5.3.1", "5.3.2", "5.3.3", "5.3.4", "5.3.5", "5.4.1",
+                  "5.4.2", "5.4.3", "5.4.4", "5.4.5", "5.4.6", "7.1.1", "7.1.2",
+                  "7.1.3", "7.2.1", "7.2.2", "7.2.3", "7.2.4", "7.2.5", "7.2.6",
+                  "7.2.7", "7.2.8", "7.2.9", "7.2.10", "7.2.11", "8.1.1", "8.1.2",
+                  "8.2.1", "8.2.2", "8.4.1", "8.4.2", "8.5.1", "8.5.2", "9.1.1",
+                  "9.1.2", "9.1.3", "9.2.1", "9.2.2", "9.2.3", "9.3.1", "9.3.2", 
+                  "9.3.3", "9.3.4", "9.5.1")
   for (species in species_list){
     threats <- rl_threats(species, key = token)
-    Sys.sleep(2)
-    code <- as.numeric(threats$result$code)
-    code <- na.omit(code)
-    threat_count[i] <- length(code)
+    code1 <- as.numeric(threats$result$code)
+    code2 <- na.omit(code1)
+    code3 <- !(code2 %in% thirdlevel)
+    threat_count[i] <- length(code3)
     i <- i + 1
   }
   df <- data.frame(species_list, threat_count, stringsAsFactors = FALSE)
@@ -740,8 +750,8 @@ threat_table <- function(species_list){
 pop_threat_tables <- function(data){
   ### data is a dataframe with the species_list  
   ### as one column and the threat_code as the
-  ### other aims to work directly with sp_habitats 
-  ###and habitat_tables 
+  ### other aims to work directly with sp_threats 
+  ###and threat_tables 
   threatdf <- threat_table(data$species_list)
   i <- 1
   for (strings in data$threat_code){
