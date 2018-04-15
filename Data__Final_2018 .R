@@ -581,4 +581,35 @@ summary(amph_test$Lar)
 summary(no_dd)
 
 
+#################################################
+############DATA ANALYSIS APRIL 14, 2018 ########
 
+
+
+threat_details <- function(species_list){
+  datalist <- list()
+  i <- 1 
+  for (species in species_list){
+    threats <- rl_threats(species, key = token)
+    df1 <- threats$result
+    df1$species_name <- species 
+    datalist[[i]] <- df1
+    i <- i + 1 
+  }
+  thirdlevel <- c("2.1.1", "2.1.2", "2.1.3", "2.1.4", "2.2.1", "2.2.2", "2.2.3",
+                  "2.3.1", "2.3.2", "2.3.3", "2.3.4", "2.4.1", "2.4.2", "2.4.3", 
+                  "5.1.1", "5.1.2", "5.1.3", "5.1.4", "5.2.1", "5.2.2", "5.2.3",
+                  "5.2.4", "5.3.1", "5.3.2", "5.3.3", "5.3.4", "5.3.5", "5.4.1",
+                  "5.4.2", "5.4.3", "5.4.4", "5.4.5", "5.4.6", "7.1.1", "7.1.2",
+                  "7.1.3", "7.2.1", "7.2.2", "7.2.3", "7.2.4", "7.2.5", "7.2.6",
+                  "7.2.7", "7.2.8", "7.2.9", "7.2.10", "7.2.11", "8.1.1", "8.1.2",
+                  "8.2.1", "8.2.2", "8.4.1", "8.4.2", "8.5.1", "8.5.2", "9.1.1",
+                  "9.1.2", "9.1.3", "9.2.1", "9.2.2", "9.2.3", "9.3.1", "9.3.2", 
+                  "9.3.3", "9.3.4", "9.5.1")
+  library(dplyr)
+  big_data <- dplyr::bind_rows(datalist)
+  big_data <- as.data.frame(big_data)
+  final <- filter(big_data, !(code %in% thirdlevel))
+  reordered <- final[,c("code","title","timing","scope","severity","score","invasive","species_name")]
+  return(reordered)
+}
