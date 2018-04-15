@@ -585,7 +585,7 @@ summary(no_dd)
 ############DATA ANALYSIS APRIL 14, 2018 ########
 
 
-
+###Functions 
 threat_details <- function(species_list){
   datalist <- list()
   i <- 1 
@@ -623,7 +623,7 @@ threat_code <- function(threat_details_output){
   i <- 1
   library(dplyr)
   for (species in species_list){
-    subset_species <- filter(threat_details_output, species_name == species)
+    subset_species <- filter(threat_details_output, threat_details_output$species_name == species)
     code <- names(table(subset_species$code))
     threat_code[i] <- paste(code, collapse = " ")
     i <- 1 + i 
@@ -1006,3 +1006,119 @@ threat_tables <- function(data){
   return(threatdf)
 } #takes DF from sp_threats and populates empty threat table
 
+####Data 
+
+#This is data that has been reduced because of AmphiBIO Connection
+class(full_se_data$species_list[1:5])
+set1 <- threat_details(full_se_data$species_list[1:5])
+set2 <- threat_details(full_se_data$species_list[6:10])
+set3 <- threat_details(full_se_data$species_list[11:14])
+set4 <- threat_details(full_se_data$species_list[15:30])
+set5 <- threat_details(full_se_data$species_list[31:70])
+set6 <- threat_details(full_se_data$species_list[71:140])
+set7 <- threat_details(full_se_data$species_list[141:200])
+set8 <- threat_details(full_se_data$species_list[201:300])
+set9 <- threat_details(full_se_data$species_list[301:400])
+set10 <- threat_details(full_se_data$species_list[401:500])
+set11 <- threat_details(full_se_data$species_list[501:600])
+set12 <- threat_details(full_se_data$species_list[601:700])
+set13 <- threat_details(full_se_data$species_list[701:800])
+set14 <- threat_details(full_se_data$species_list[801:900])
+set15 <- threat_details(full_se_data$species_list[901:931])
+        #Only data that matches with AmphiBIO 
+threat_specifics <- rbind(set1,set2, set3, set4, set5, set6,
+                           set7, set8, set9, set10, set11, set12,
+                           set13, set14, set15)
+
+#full_se_data = Where AmphiBIO data and IUCN data did not match, filtered out 
+#when only analysing the threats from iucn, I dont necessarily care about
+#where they match or dont match
+wu <- setdiff(se_asian_amph$new_species, full_se_data$new_species)
+set16 <- threat_details(wu[1:150])
+set17 <- threat_details(wu[151:182])
+
+details <- rbind(set1,set2, set3, set4, set5, set6,
+              set7, set8, set9, set10, set11, set12,
+              set13, set14, set15, set16, set17)
+summary(details)
+
+code_name <- threat_code(details)
+finaldata <- threat_tables(code_name)
+summary((finaldata$R1.1))
+
+
+
+rl_threats("Amolops cucae", key = token)
+############################################
+
+
+#Start filtering the data 
+library(sqldf)
+library(dplyr)
+library(ggplot2)
+
+
+
+    #copy details, then add se_asian_amph data to it
+copy <- details
+summary(copy)
+together <- merge(copy, se_asian_amph, by = "species_name")
+summary(together)
+
+
+together #has iucn taxon info and iucn threat info
+summary(together)
+
+together$code <- as.factor(together$code)
+together$title <- as.factor(together$title)
+together$timing <- as.factor(together$timing)
+together$scope <- as.factor(together$scope)
+together$severity <- as.factor(together$severity)
+together$score <- as.factor(together$score)
+together$invasive <- as.factor(together$invasive)
+#Graphs by Order 
+caudata <- filter(together, Order == "CAUDATA")
+gymnophiona <- filter(together, Order == "GYMNOPHIONA")
+anura <- filter(together, Order == "ANURA")
+
+card1 <- ggplot(together, mapping = aes(x = Population.trend, fill = Red.List.status)) + 
+  geom_bar(stat = "count")
+
+#annual_crops 
+annual_crops <- filter(together, code == 2.1)
+ag_redlist <- summary(annual_crops$Red.List.status)
+ag_redlist <- as.data.frame(count(annual_crops, Red.List.status))
+
+
+#logging and wood harvesting 
+logging_wood <- filter(together, code == 5.3)
+log_redlist <- as.data.frame(count(logging_wood, Red.List.status))
+
+#do threatened vs not_threatened .... and then compare the titles of the threats to see
+  #if there is any real difference 
+
+ag <- filter(finaldata, A2.1 == 1)
+summary(ag)
+final_num <- finaldata
+final_num <- apply(final_num, 2, as.numeric)
+threat_cor <- cor(final_num)
+final_num$I8.3 <- NULL
+
+plot(threat_cor)
+library(reshape2)
+melted_threats <- melt(threat_cor)
+head(melted_threats)
+
+
+
+
+library(ggplot2)
+cardib3 <- ggplot(data = melted_threats, aes(x = Var1, y = Var2, fill = value)) + 
+  geom_tile(color = "white")+
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                       midpoint = 0, limit = c(-1,1), space = "Lab", 
+                       name="Pearson\nCorrelation") +
+  theme_minimal()+ 
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, 
+                                   size = 12, hjust = 1))+
+  coord_fixed()
