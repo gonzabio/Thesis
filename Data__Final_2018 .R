@@ -631,3 +631,88 @@ threat_code <- function(threat_details_output){
   threatdf <- data.frame(species_list, threat_code)
   return(threatdf)
 }
+no_third_level <- function(species_list){
+  R1.1 <- rep(c(0),  each = length(species_list)) 
+  R1.2 <- rep(c(0),  each = length(species_list))
+  R1.3 <- rep(c(0),  each = length(species_list))
+  
+  #Agriculture and Aquaculture 
+  A2.1 <- rep(c(0),  each = length(species_list))
+  A2.2 <- rep(c(0),  each = length(species_list))
+  A2.3 <- rep(c(0),  each = length(species_list))
+  A2.4 <- rep(c(0),  each = length(species_list))
+  #Energy Productoin and mining 
+  E3.1 <- rep(c(0),  each = length(species_list)) 
+  E3.2 <- rep(c(0),  each = length(species_list))
+  E3.3 <- rep(c(0),  each = length(species_list)) 
+  
+  #Transportation and service corridots 
+  T4.1 <- rep(c(0),  each = length(species_list))
+  T4.2 <- rep(c(0),  each = length(species_list))
+  T4.3 <- rep(c(0),  each = length(species_list))
+  T4.4 <- rep(c(0),  each = length(species_list))
+  
+  #Biological Resource use 
+  B5.1 <- rep(c(0),  each = length(species_list))
+  B5.2 <- rep(c(0),  each = length(species_list))
+  
+  B5.3 <- rep(c(0),  each = length(species_list))
+  
+  B5.4 <- rep(c(0),  each = length(species_list))
+  #Human intrustions and disturbance 
+  H6.1 <- rep(c(0),  each = length(species_list))  
+  H6.2 <- rep(c(0),  each = length(species_list))
+  H6.3 <- rep(c(0),  each = length(species_list))
+  
+  #Natural system modifications 
+  N7.1 <- rep(c(0),  each = length(species_list))
+  
+  N7.2 <- rep(c(0),  each = length(species_list))
+  N7.3 <- rep(c(0),  each = length(species_list))
+  
+  #Invasive and other problematic species, genes and disease 
+  I8.1 <- rep(c(0),  each = length(species_list))
+  
+  I8.2 <- rep(c(0),  each = length(species_list))
+  I8.3 <- rep(c(0),  each = length(species_list))
+  
+  I8.4 <- rep(c(0),  each = length(species_list))
+  
+  I8.5 <- rep(c(0),  each = length(species_list))
+  
+  I8.6 <- rep(c(0),  each = length(species_list))
+  
+  #Pollution 
+  P9.1 <- rep(c(0),  each = length(species_list))
+  
+  P9.2 <- rep(c(0),  each = length(species_list))
+  P9.3 <- rep(c(0),  each = length(species_list))
+  
+  P9.4 <- rep(c(0),  each = length(species_list))
+  
+  P9.5 <- rep(c(0),  each = length(species_list))
+  
+  P9.6 <- rep(c(0),  each = length(species_list))
+  
+  #Geological Events 
+  G10.1 <- rep(c(0),  each = length(species_list))
+  G10.2 <- rep(c(0),  each = length(species_list))
+  G10.3 <- rep(c(0),  each = length(species_list))
+  
+  #Climate Change and severe weather 
+  C11.1 <- rep(c(0),  each = length(species_list))
+  C11.2 <- rep(c(0),  each = length(species_list))
+  C11.3 <- rep(c(0),  each = length(species_list))
+  C11.4 <- rep(c(0),  each = length(species_list))
+  C11.5 <- rep(c(0),  each = length(species_list))
+  
+  #Other options 
+  O12.1 <- rep(c(0),  each = length(species_list))
+  
+  threat_df <- data.frame(species_list, R1.1, R1.2, R1.3, A2.1, A2.2, A2.3, A2.4, E3.1, E3.2,
+                          E3.3, T4.1, T4.2, T4.3, T4.4, B5.1, B5.2,B5.3, B5.4,
+                          H6.1, H6.2, H6.3, N7.1,N7.2,N7.3, I8.1,I8.2,I8.3, I8.4, I8.5,I8.6, P9.1,
+                          P9.2, P9.3,P9.4,P9.5, P9.6, G10.1, G10.2, G10.3, C11.1, C11.2, C11.3, C11.4, C11.5)
+  return(threat_df)
+} #Empty table of threats 
+
