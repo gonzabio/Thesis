@@ -613,3 +613,21 @@ threat_details <- function(species_list){
   reordered <- final[,c("code","title","timing","scope","severity","score","invasive","species_name")]
   return(reordered)
 }
+threat_code <- function(threat_details_output){
+  ### data is a dataframe with the species_list  
+  ### as one column and the threat_code as the
+  ### other aims to work directly with sp_threats 
+  ###and threat_tables 
+  species_list <- names(table(threat_details_output$species_name)) 
+  threat_code <- vector(mode = "character", length = length(species_list))
+  i <- 1
+  library(dplyr)
+  for (species in species_list){
+    subset_species <- filter(threat_details_output, species_name == species)
+    code <- names(table(subset_species$code))
+    threat_code[i] <- paste(code, collapse = " ")
+    i <- 1 + i 
+  }
+  threatdf <- data.frame(species_list, threat_code)
+  return(threatdf)
+}
