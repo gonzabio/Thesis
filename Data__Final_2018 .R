@@ -1076,6 +1076,10 @@ together$scope <- as.factor(together$scope)
 together$severity <- as.factor(together$severity)
 together$score <- as.factor(together$score)
 together$invasive <- as.factor(together$invasive)
+together$threatened <- ifelse(together$Red.List.status == "LC" | together$Red.List.status == "NT", "Not Threatened", "Threatened")
+together$threatened <- as.factor(together$threatened)
+
+
 #Graphs by Order 
 caudata <- filter(together, Order == "CAUDATA")
 gymnophiona <- filter(together, Order == "GYMNOPHIONA")
@@ -1097,6 +1101,11 @@ log_redlist <- as.data.frame(count(logging_wood, Red.List.status))
 #do threatened vs not_threatened .... and then compare the titles of the threats to see
   #if there is any real difference 
 
+
+
+##############################
+###correlation
+#############################
 ag <- filter(finaldata, A2.1 == 1)
 summary(ag)
 final_num <- finaldata
@@ -1108,9 +1117,10 @@ plot(threat_cor)
 library(reshape2)
 melted_threats <- melt(threat_cor)
 head(melted_threats)
-
-
-
+        #testing the signifcance of the correlation: (need to see if 
+        #pearsons test is the best for this - is this data paired?)
+cor.test(final_num$C11.5, final_num$C11.1)
+cor.test(final_num$R1.1, final_num$R1.2)
 
 library(ggplot2)
 cardib3 <- ggplot(data = melted_threats, aes(x = Var1, y = Var2, fill = value)) + 
@@ -1119,6 +1129,181 @@ cardib3 <- ggplot(data = melted_threats, aes(x = Var1, y = Var2, fill = value)) 
                        midpoint = 0, limit = c(-1,1), space = "Lab", 
                        name="Pearson\nCorrelation") +
   theme_minimal()+ 
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, 
-                                   size = 12, hjust = 1))+
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, 
+                                   size = 9, hjust = 1))+
   coord_fixed()
+#############################
+#MAKE GRAPHS SO ISH CAN POP OFF
+############################
+
+#Figure 1 
+bodak1 <- ggplot(data = together, aes (x = code, fill = threatened)) +
+            geom_bar(stat = "count", position = "dodge") + 
+            xlab(label = "Threat Code") + ylab(label = "Species Count") + 
+            theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+            theme(axis.text.x = element_text(angle = 60, vjust = 1, size = 9, hjust = 1)) +
+            guides(fill=guide_legend(title=NULL))
+            
+bodak1
+
+
+bodak2 <- ggplot(data = together, aes( x = timing)) + geom_bar(stat = "count") +
+            theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+            theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
+            guides(fill=guide_legend(title=NULL)) +
+            xlab(label = "Threat Timing") + ylab(label = "Count") 
+bodak2
+
+bodak3 <- ggplot(data = together, aes( x = scope)) + geom_bar(stat = "count") +
+              theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                                 panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+              theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
+              guides(fill=guide_legend(title=NULL)) +
+              xlab(label = "Threat Scope") + ylab(label = "Count") 
+bodak3
+
+bodak4 <- ggplot(data = together, aes( x = severity)) + geom_bar(stat = "count") +
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  xlab(label = "Threat Severity") + ylab(label = "Count") 
+bodak4
+
+
+bodak5 <- ggplot(data = together, aes( x = score)) + geom_bar(stat = "count") +
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  xlab(label = "Threat Score") + ylab(label = "Count") 
+bodak5
+
+bodak6 <- ggplot(data = together, aes( x = score, fill = threatened)) + geom_bar(stat = "count", position = "dodge") +
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  xlab(label = "Threat Score") + ylab(label = "Count") 
+bodak6
+
+bodak7 <- ggplot(data = together, aes( x = Family, fill = threatened)) + geom_bar(stat = "count", position = "dodge") +
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  xlab(label = "Family") + ylab(label = "Count") 
+bodak7
+
+
+bodak8 <- ggplot(data = together, aes( x = Family, fill = Red.List.status)) + geom_bar(stat = "count", position = "dodge") +
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  xlab(label = "Family") + ylab(label = "Count") 
+bodak8
+
+
+bodak9 <- ggplot(data = together, aes( x = Year.assessed)) + geom_bar(stat = "count", position = "dodge") +
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  xlab(label = "Year Assessed") + ylab(label = "Count") 
+bodak9
+
+#Rhacophoridae: Select only data from each family 
+      #some of thesee graphs are off because they are duplicates
+      #i.e. same species but many rows because there are
+      #lots of threats.
+      #need to eliminate duplicates and then take these into consideration
+      #right now, the number is off 
+rhacophoridae <- together %>% filter(together$Family == "RHACOPHORIDAE")
+rhac1 <- ggplot(data = rhacophoridae, aes( x = title)) + geom_bar(stat = "count", position = "dodge") +
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  xlab(label = "Threat Type") + ylab(label = "Count") 
+rhac1 
+
+rhac2 <- ggplot(data = rhacophoridae, aes( x = timing)) + geom_bar(stat = "count", position = "dodge") +
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  xlab(label = "Threat Timing") + ylab(label = "Count") 
+rhac2
+
+rhac3 <- ggplot(data = rhacophoridae, aes( x = severity)) + geom_bar(stat = "count", position = "dodge") +
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  xlab(label = "Threat Timing") + ylab(label = "Count") 
+rhac3
+
+rhac4 <- ggplot(data = rhacophoridae, aes( x = Red.List.status)) + geom_bar(stat = "count", position = "dodge") +
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  xlab(label = "Red List Status") + ylab(label = "Count") 
+rhac4
+
+#Ranidae 
+ranidae <- together %>% filter(together$Family == "RANIDAE")
+ran1 <- ggplot(data = together, aes( x = title)) + geom_bar(stat = "count", position = "dodge") +
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  xlab(label = "Threat Type") + ylab(label = "Count") 
+ran1 
+
+
+###^ graphs explaining the overview of the data 
+
+
+
+
+
+
+library(rredlist)
+rl_threats("Mantella cowanii", key = token)
+
+#################
+##CHI SQUARE TEST
+#################
+
+yes_threatened <- sqldf("SELECT * FROM together WHERE threatened == 'Threatened' ")
+no_threatened <- sqldf ("SELECT * FROM together WHERE threatened != 'Threatened' ")
+
+
+
+yes_threatened$title <- as.factor(yes_threatened$title)
+no_threatened$title <- as.factor(no_threatened$title)
+summary(yes_threatened$title)
+
+summary(yes_threatened$title)
+#Want to see if there is a significant difference in the number of threats between 
+#threatened and not threatened population 
+
+          #Top 5 threats included (chisquare does not include NA)
+library(dplyr)
+s1 <- sqldf("SELECT title, threatened, timing FROM together")
+#1.1, 2.1, 5.3, 9.3, NA 
+s1$timing <- as.factor(s1$timing)
+summary(s1$timing)
+s2 <- s1 %>% filter(s1$title == "Housing & urban areas" | s1$title == "Annual & perennial non-timber crops" |s1$title == "Logging & wood harvesting" | s1$title == "Agricultural & forestry effluents" | is.na(s1$title == TRUE) )
+#s2 <- s1 %>% filter(s1$title == "Annual & perennial non-timber crops" |s1$title == "Logging & wood harvesting")
+      #chi square null hypothesis: the rows and columns are independent 
+      #chi square alt. hypothesis: the rowas and columns are dependent 
+rs1 <- chisq.test(s2$threatened, s2$title, correct = FALSE)
+      #the p value is less than 0.05, therefore we can reject the null hypothesis 
+      #and accept the alternate hypothesis. 
+
+
