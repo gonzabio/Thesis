@@ -1069,6 +1069,20 @@ summary(together)
 together #has iucn taxon info and iucn threat info
 summary(together)
 
+ALLDATA  #COPY OF TOGETHER. IM GOING TO REMOVE DD FROM TOGETHER AND REDO ANALYSIS 
+
+count(ALLDATA$title)
+
+
+
+
+
+
+
+together <- together[!(together$Red.List.status == "DD"),]
+summary(together$Red.List.status)
+
+
 together$code <- as.factor(together$code)
 together$title <- as.factor(together$title)
 together$timing <- as.factor(together$timing)
@@ -1122,6 +1136,7 @@ head(melted_threats)
 cor.test(final_num$C11.5, final_num$C11.1)
 cor.test(final_num$R1.1, final_num$R1.2)
 
+
 library(ggplot2)
 cardib3 <- ggplot(data = melted_threats, aes(x = Var1, y = Var2, fill = value)) + 
   geom_tile(color = "white")+
@@ -1136,24 +1151,34 @@ cardib3 <- ggplot(data = melted_threats, aes(x = Var1, y = Var2, fill = value)) 
 #MAKE GRAPHS SO ISH CAN POP OFF
 ############################
 
+
+
 #Figure 1 
 bodak1 <- ggplot(data = together, aes (x = code, fill = threatened)) +
             geom_bar(stat = "count", position = "dodge") + 
-            xlab(label = "Threat Code") + ylab(label = "Species Count") + 
+            xlab(label = "Red List Threat Code") + ylab(label = "Species Count") + 
+            #Removes the grid lines in the back: 
             theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
             theme(axis.text.x = element_text(angle = 60, vjust = 1, size = 9, hjust = 1)) +
-            guides(fill=guide_legend(title=NULL))
-            
-bodak1
+            guides(fill=guide_legend(title=NULL)) +
+            scale_fill_manual(values = c("dark grey", "red")) + 
+            #Reorders the x acis to be in the correct order
+            scale_x_discrete(limits = c('1.1', '1.2', '1.3', '2.1', '2.2', '2.3', 
+                                        '2.4', '3.2', '3.3', '4.1', '4.2', '5.1', 
+                                        '5.2', '5.3', '5.4', '6.1', '6.2', '6.3', 
+                                        '7.1', '7.2', '7.3', '8.1', '8.2', '8.4', 
+                                        '9.1', '9.2', '9.3', '9.4', '10.1', '11.1',
+                                        '11.2', '11.3', '11.4', '12.1', NA))
 
+bodak1
 
 bodak2 <- ggplot(data = together, aes( x = timing)) + geom_bar(stat = "count") +
             theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
             theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
             guides(fill=guide_legend(title=NULL)) +
-            xlab(label = "Threat Timing") + ylab(label = "Count") 
+            xlab(label = "Red List Threat Timing") + ylab(label = "Count") 
 bodak2
 
 bodak3 <- ggplot(data = together, aes( x = scope)) + geom_bar(stat = "count") +
@@ -1180,6 +1205,11 @@ bodak5 <- ggplot(data = together, aes( x = score)) + geom_bar(stat = "count") +
   guides(fill=guide_legend(title=NULL)) +
   xlab(label = "Threat Score") + ylab(label = "Count") 
 bodak5
+
+
+
+
+
 
 bodak6 <- ggplot(data = together, aes( x = score, fill = threatened)) + geom_bar(stat = "count", position = "dodge") +
   theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
@@ -1214,6 +1244,20 @@ bodak9 <- ggplot(data = together, aes( x = Year.assessed)) + geom_bar(stat = "co
   guides(fill=guide_legend(title=NULL)) +
   xlab(label = "Year Assessed") + ylab(label = "Count") 
 bodak9
+
+
+
+#####
+KOD <- ggplot(data = together, aes( x = Red.List.status, fill = Red.List.status)) + geom_bar(stat = "count") + coord_polar() + facet_wrap(~Year.assessed)
+theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                   panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  xlab(label = "Threat Score") + ylab(label = "Count") 
+bodak5
+
+ggplot(data = together) + 
+  geom_count(mapping = aes(x = score, y = timing, size = prop))
 
 #Rhacophoridae: Select only data from each family 
       #some of thesee graphs are off because they are duplicates
@@ -1298,11 +1342,21 @@ s1 <- sqldf("SELECT title, threatened, timing FROM together")
 #1.1, 2.1, 5.3, 9.3, NA 
 s1$timing <- as.factor(s1$timing)
 summary(s1$timing)
-s2 <- s1 %>% filter(s1$title == "Housing & urban areas" | s1$title == "Annual & perennial non-timber crops" |s1$title == "Logging & wood harvesting" | s1$title == "Agricultural & forestry effluents" | is.na(s1$title == TRUE) )
+n <- high_threats$title
+
+s2 <- filter(s1, title %in% n)
 #s2 <- s1 %>% filter(s1$title == "Annual & perennial non-timber crops" |s1$title == "Logging & wood harvesting")
       #chi square null hypothesis: the rows and columns are independent 
       #chi square alt. hypothesis: the rowas and columns are dependent 
 rs1 <- chisq.test(s2$threatened, s2$title, correct = FALSE)
+
+
+low_threats <- count(together, title)
+low_threats <- as.data.frame(low_threats)
+low_threats <- order(low_threats, decreasing = TRUE)
+
+high_threats <- filter(low_threats, low_threats$n >= 10)
+
       #the p value is less than 0.05, therefore we can reject the null hypothesis 
       #and accept the alternate hypothesis. 
 
