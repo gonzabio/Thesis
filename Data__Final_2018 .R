@@ -1173,21 +1173,7 @@ bodak1 <- ggplot(data = together, aes (x = code, fill = threatened)) +
 
 bodak1
 
-bodak2 <- ggplot(data = together, aes( x = timing)) + geom_bar(stat = "count") +
-            theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
-            theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
-            guides(fill=guide_legend(title=NULL)) +
-            xlab(label = "Red List Threat Timing") + ylab(label = "Count") 
-bodak2
 
-bodak3 <- ggplot(data = together, aes( x = scope)) + geom_bar(stat = "count") +
-              theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-                                 panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
-              theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
-              guides(fill=guide_legend(title=NULL)) +
-              xlab(label = "Threat Scope") + ylab(label = "Count") 
-bodak3
 
 bodak4 <- ggplot(data = together, aes( x = severity)) + geom_bar(stat = "count") +
   theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
