@@ -259,6 +259,8 @@ all_threat_count$Red_List_status <- as.factor(all_threat_count$Red_List_status)
 
       #ALL AMPHIBIAINS DENSITY PLOT 
 library(ggplot2)
+all_threat_count$Red_List_status <- factor(all_threat_count$Red_List_status, levels = c("LC", "NT", "VU", "EN", "CR"))
+
 all1 <- ggplot(all_threat_count, aes(x = all_threat_count$threat_count, colour = Red_List_status)) + geom_density(size = 0.75) +
   scale_x_continuous(name = "Number of Threat Processes") + 
   scale_y_continuous(name = "Density") + 
@@ -396,3 +398,58 @@ selcplot1 <- ggplot(data = se_lc_data, aes (x = code, fill = code)) +
                               '7.1', '7.2', '7.3', '8.1', '8.2', '8.4', 
                               '9.1', '9.2', '9.3', '9.4', '10.1', '11.1',
                               '11.2', '11.3', '11.4', '12.1', NA))
+
+
+
+
+#3 continued: SE ASIA THREAT COUNT (DENSITY DITRIBUTION, ANOVA, BOXPLOT)
+
+
+counting <- threat_count(details)
+
+nrow(se_asian_amph)
+nrow(counting)
+
+counting$Red_list_status <- se_asian_amph$Red.List.status
+counting$Red_list_status <- as.factor(counting$Red_list_status)
+
+head(counting)
+head(se_asian_amph)
+
+#SE ASIA BOXPLOT 
+together$Red.List.status <- factor(together$Red.List.status, levels = c("LC", "NT", "VU", "EN", "CR"))
+counting$Red_list_status <- factor(counting$Red_list_status, levels = c("LC", "NT", "VU", "EN", "CR"))
+g <- ggplot(data = counting, aes(x = Red_list_status, y = threat_count, fill = Red_list_status)) + geom_boxplot() +
+  labs(title = NULL) +
+  scale_x_discrete(limits = c("LC", "NT", "VU", "EN", "CR")) +
+  scale_fill_manual(values = c("green3", "olivedrab2", "yellow","orangered", "red3"), 
+                    labels = c("Least Concern", "Near Threatened", "Vulnerable", 
+                               "Endangered", "Critically Endangered"),
+                    name = NULL) + 
+  xlab("South & Southeast Red List Cateogry") + ylab("Number of Threats") +
+  theme_minimal() 
+
+
+    #SE DENSITY DISTRIBUTION 
+counting$threat_count <- as.numeric(counting$threat_count)
+counting2 <- counting %>% filter(counting$Red_list_status != "DD")
+counting3 <- counting2 %>% filter(counting2$Red_list_status != "EX")
+
+counting3$Red_list_status <- factor(counting3$Red_list_status, levels = c("LC", "NT", "VU", "EN", "CR"))
+se_dens <- ggplot(counting3, aes(x = threat_count, colour = Red_list_status)) + geom_density(size = 0.75) +
+  scale_x_continuous(name = "South & Southeast Asia Number of Threat Processes") + 
+  scale_y_continuous(name = "Density") + 
+  scale_color_manual(values = c("green3", "olivedrab2", "yellow","orangered", "red3"), 
+                     name = c(""), 
+                     labels = c("Least Concern", "Near Threatened", "Vulnerable", 
+                                "Endangered", "Critically Endangered")) + 
+  theme_minimal() 
+
+library("pgirmess")
+kruskal.test(threat_count ~ Red_list_status, data = counting3)
+hist(counting3$threat_count, 100)
+kruskalmc(threat_count ~ Red_list_status, data = counting3)
+
+
+
+
