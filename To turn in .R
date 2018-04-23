@@ -28,6 +28,8 @@ bodak7
 
 
 #2: Do density plots, box plots and histograms for ALL AMPHIBIANS as previously completed 
+
+      ####Begin: ALL AMPHIBIANS (WORLDWIDE EXPLORATORY DATA ANALSYS)
 lc_threat_table
 cr_threat_table
 en_threat_table
@@ -60,6 +62,9 @@ lc17 <- threat_details(lc_threat_table$species_list[1501:1550])
 
 lc_data <- rbind(lc1, lc2, lc3, lc4, lc5, lc6, lc7, lc8, lc9,
                  lc10, lc11, lc12, lc13, lc14, lc15, lc16, lc17)
+lc_data$Red_List_status <- "LC"
+lc_data$threatened <- "Not Threatened"
+
 lc_threat_count <- sp_threat_count(lc_data)
 rl_threats("Astylosternus batesi", key = token)
   #get all NT 
@@ -71,6 +76,8 @@ nt5 <- threat_details(nt_threat_table$species_list[201:300])
 nt6 <- threat_details(nt_threat_table$species_list[301:400])
 nt_data <- rbind(nt1, nt2, nt3, nt4, nt5, nt6)
 nt_threat_count <- sp_threat_count(nt_data)
+nt_data$Red_List_status <- "NT"
+nt_data$threatened <- "Not Threatened"
 
   #get all EN data 
 
@@ -84,6 +91,9 @@ en7 <- threat_details(en_threat_table$species_list[501:600])
 en8 <- threat_details(en_threat_table$species_list[601:700])
 en9 <- threat_details(en_threat_table$species_list[701:800])
 en10 <- threat_details(en_threat_table$species_list[801:855])
+en_data <- rbind(en1, en2, en3, en4, en5, en6, en7, en8, en9, en10)
+en_data$Red_List_status <- "EN"
+en_data$threatened <- "Threatened"
 
   #get all vu data 
 vu1 <- threat_details(vu_threat_table$species_list[1:50])
@@ -94,9 +104,149 @@ vu5 <- threat_details(vu_threat_table$species_list[351:450])
 vu6 <- threat_details(vu_threat_table$species_list[451:550])
 vu7 <- threat_details(vu_threat_table$species_list[551:650])
 vu8 <- threat_details(vu_threat_table$species_list[651:670])
+vu_data <- rbind(vu1, vu2, vu3, vu4, vu5, vu6, vu7, vu8)
+vu_data$Red_List_status <- "VU"
+vu_data$threatened <- "Threatened"
 
 cr1 <- threat_details(cr_threat_table$species_list[1:50])
 cr2 <- threat_details(cr_threat_table$species_list[51:150])
+cr3 <- threat_details(cr_threat_table$species_list[151:200])
+cr4 <- threat_details(cr_threat_table$species_list[201:300])
+cr5 <- threat_details(cr_threat_table$species_list[301:400])
+cr6 <- threat_details(cr_threat_table$species_list[401:500])
+cr7 <- threat_details(cr_threat_table$species_list[501:546])
+cr_data <- rbind(cr1, cr2, cr3, cr4, cr5, cr6, cr7)
+cr_data$Red_List_status <- "CR"
+cr_data$threatened <- "Threatened"
+
+worldwide_data <- rbind(lc_data, nt_data, en_data, cr_data, vu_data)
+worldwide_data$threatened <- as.factor(worldwide_data$threatened)
+
+mad1 <- ggplot(data = worldwide_data, aes (x = code, fill = threatened)) +
+  geom_bar(stat = "count", position = "dodge") + 
+  xlab(label = "Red List Threat Code") + ylab(label = "Species Count") + 
+  #Removes the grid lines in the back: 
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  scale_fill_manual(values = c("dark grey", "red")) +
+  scale_x_discrete(limits = c('1.1', '1.2', '1.3', '2.1', '2.2', '2.3', 
+                              '2.4', '3.2', '3.3', '4.1', '4.2', '5.1', 
+                              '5.2', '5.3', '5.4', '6.1', '6.2', '6.3', 
+                              '7.1', '7.2', '7.3', '8.1', '8.2', '8.4', 
+                              '9.1', '9.2', '9.3', '9.4', '10.1', '11.1',
+                              '11.2', '11.3', '11.4', '12.1', NA))
+            
+            #THIS ::: IS BEING MAD ANNOYING 
+                  #basically - there are three threat codes that shouldnt be in there 
+                  #9.5.2, 9.5.3, 9.5.4
+                  #tried to filter it out of worldwide_data before turning it into species list and code
+                  #once i tried to do that, and i tried to create the tables with all of the threat 
+                  #info, the tables are returning all the same values - this happened   
+                  #once before - not sure why the function isnt iterating through each threat code/speceis
+            # world_codes <- threat_code(worldwide_data)
+            # world_codes$threat_code <- world_codes$threat_code[!is.na(world_codes$threat_code)]
+            # 
+            # 
+            # world_codes$threat_code <- as.factor(world_codes$threat_code)
+            # 
+            # worldwide_data$scope <- as.factor(worldwide_data$scope)  
+            # worldwide_data$score <- as.factor(worldwide_data$score)
+            # summary(worldwide_data$score)
+            # 
+            # 
+            # 
+            # worldwide_data <- worldwide_data[!(worldwide_data$code == "9.5.2" | worldwide_data$code == "9.5.3" | worldwide_data$code == "9.5.4"),]
+            # worldwide_data$code <- as.factor(worldwide_data$code)
+            # world_table_threats <- threat_tables(world_codes)
+            # 
+            # summary(world_codes$threat_code)
+
+
+
+
+        #LC
+
+lcplot1 <- ggplot(data = lc_data, aes (x = code, fill = code)) +
+  geom_bar(stat = "count", position = "dodge", color="black", fill="green3") + 
+  xlab(label = "Red List Threat Code: Least Concern") + ylab(label = "Species Count") + 
+  #Removes the grid lines in the back: 
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  theme(legend.position="none") + 
+  scale_x_discrete(limits = c('1.1', '1.2', '1.3', '2.1', '2.2', '2.3', 
+                              '2.4', '3.2', '3.3', '4.1', '4.2', '5.1', 
+                              '5.2', '5.3', '5.4', '6.1', '6.2', '6.3', 
+                              '7.1', '7.2', '7.3', '8.1', '8.2', '8.4', 
+                              '9.1', '9.2', '9.3', '9.4', '10.1', '11.1',
+                              '11.2', '11.3', '11.4', '12.1', NA))
+
+ntplot1 <- ggplot(data = nt_data, aes (x = code, fill = code)) +
+  geom_bar(stat = "count", position = "dodge", color="black", fill="olivedrab2") + 
+  xlab(label = "Red List Threat Code: Near Threatened") + ylab(label = "Species Count") + 
+  #Removes the grid lines in the back: 
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  theme(legend.position="none") + 
+  scale_x_discrete(limits = c('1.1', '1.2', '1.3', '2.1', '2.2', '2.3', 
+                              '2.4', '3.2', '3.3', '4.1', '4.2', '5.1', 
+                              '5.2', '5.3', '5.4', '6.1', '6.2', '6.3', 
+                              '7.1', '7.2', '7.3', '8.1', '8.2', '8.4', 
+                              '9.1', '9.2', '9.3', '9.4', '10.1', '11.1',
+                              '11.2', '11.3', '11.4', '12.1', NA))
+
+
+vuplot1 <- ggplot(data = vu_data, aes (x = code, fill = code)) +
+  geom_bar(stat = "count", position = "dodge", color="black", fill="yellow") + 
+  xlab(label = "Red List Threat Code: Vulnerable") + ylab(label = "Species Count") + 
+  #Removes the grid lines in the back: 
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  theme(legend.position="none") + 
+  scale_x_discrete(limits = c('1.1', '1.2', '1.3', '2.1', '2.2', '2.3', 
+                              '2.4', '3.2', '3.3', '4.1', '4.2', '5.1', 
+                              '5.2', '5.3', '5.4', '6.1', '6.2', '6.3', 
+                              '7.1', '7.2', '7.3', '8.1', '8.2', '8.4', 
+                              '9.1', '9.2', '9.3', '9.4', '10.1', '11.1',
+                              '11.2', '11.3', '11.4', '12.1', NA))
+
+enplot1 <- ggplot(data = en_data, aes (x = code, fill = code)) +
+  geom_bar(stat = "count", position = "dodge", color="black", fill="orangered") + 
+  xlab(label = "Red List Threat Code: Endangered") + ylab(label = "Species Count") + 
+  #Removes the grid lines in the back: 
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  theme(legend.position="none") + 
+  scale_x_discrete(limits = c('1.1', '1.2', '1.3', '2.1', '2.2', '2.3', 
+                              '2.4', '3.2', '3.3', '4.1', '4.2', '5.1', 
+                              '5.2', '5.3', '5.4', '6.1', '6.2', '6.3', 
+                              '7.1', '7.2', '7.3', '8.1', '8.2', '8.4', 
+                              '9.1', '9.2', '9.3', '9.4', '10.1', '11.1',
+                              '11.2', '11.3', '11.4', '12.1', NA))
+crplot1 <- ggplot(data = cr_data, aes (x = code, fill = code)) +
+  geom_bar(stat = "count", position = "dodge", color="black", fill="red3") + 
+  xlab(label = "Red List Threat Code:Critically Endangered") + ylab(label = "Species Count") + 
+  #Removes the grid lines in the back: 
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  theme(legend.position="none") + 
+  scale_x_discrete(limits = c('1.1', '1.2', '1.3', '2.1', '2.2', '2.3', 
+                              '2.4', '3.2', '3.3', '4.1', '4.2', '5.1', 
+                              '5.2', '5.3', '5.4', '6.1', '6.2', '6.3', 
+                              '7.1', '7.2', '7.3', '8.1', '8.2', '8.4', 
+                              '9.1', '9.2', '9.3', '9.4', '10.1', '11.1',
+                              '11.2', '11.3', '11.4', '12.1', NA))
 
 cr_threat_count$Red_List_status <- "CR"
 en_threat_count$Red_List_status <- "EN"
@@ -155,3 +305,94 @@ hist(all_threat_count$threat_count, 100)
 library("pgirmess")
 kruskalmc(threat_count ~ Red_List_status, data = all_threat_count2)
 sd(all_threat_count$threat_count)
+
+          ####END ALL AMPHIBIANS (WORLDWIDE) EXPLORATORY DATA ANALYSIS 
+
+#3. South and SE Asia Exploratory Data (plots)
+
+together #together doesnt have DD 
+se_cr_data <- together %>% filter(together$Red.List.status == "CR")
+secrplot1 <- ggplot(data = se_cr_data, aes (x = code, fill = code)) +
+  geom_bar(stat = "count", position = "dodge", color="black", fill="red3") + 
+  xlab(label = "South & Southeast Asia Red List Threat Code:Critically Endangered") + ylab(label = "Species Count") + 
+  #Removes the grid lines in the back: 
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  theme(legend.position="none") + 
+  scale_x_discrete(limits = c('1.1', '1.2', '1.3', '2.1', '2.2', '2.3', 
+                              '2.4', '3.2', '3.3', '4.1', '4.2', '5.1', 
+                              '5.2', '5.3', '5.4', '6.1', '6.2', '6.3', 
+                              '7.1', '7.2', '7.3', '8.1', '8.2', '8.4', 
+                              '9.1', '9.2', '9.3', '9.4', '10.1', '11.1',
+                              '11.2', '11.3', '11.4', '12.1', NA))
+
+se_en_data <- together %>% filter(together$Red.List.status == "EN")
+seenplot1 <- ggplot(data = se_en_data, aes (x = code, fill = code)) +
+  geom_bar(stat = "count", position = "dodge", color="black", fill="orangered") + 
+  xlab(label = "South & Southeast Asia Red List Threat Code: Endangered") + ylab(label = "Species Count") + 
+  #Removes the grid lines in the back: 
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  theme(legend.position="none") + 
+  scale_x_discrete(limits = c('1.1', '1.2', '1.3', '2.1', '2.2', '2.3', 
+                              '2.4', '3.2', '3.3', '4.1', '4.2', '5.1', 
+                              '5.2', '5.3', '5.4', '6.1', '6.2', '6.3', 
+                              '7.1', '7.2', '7.3', '8.1', '8.2', '8.4', 
+                              '9.1', '9.2', '9.3', '9.4', '10.1', '11.1',
+                              '11.2', '11.3', '11.4', '12.1', NA))
+
+se_vu_data <- together %>% filter(together$Red.List.status == "VU")
+
+sevuplot1 <- ggplot(data = se_vu_data, aes (x = code, fill = code)) +
+  geom_bar(stat = "count", position = "dodge", color="black", fill="yellow") + 
+  xlab(label = "South & Southeast Asia Red List Threat Code: Vulnerable") + ylab(label = "Species Count") + 
+  #Removes the grid lines in the back: 
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  theme(legend.position="none") + 
+  scale_x_discrete(limits = c('1.1', '1.2', '1.3', '2.1', '2.2', '2.3', 
+                              '2.4', '3.2', '3.3', '4.1', '4.2', '5.1', 
+                              '5.2', '5.3', '5.4', '6.1', '6.2', '6.3', 
+                              '7.1', '7.2', '7.3', '8.1', '8.2', '8.4', 
+                              '9.1', '9.2', '9.3', '9.4', '10.1', '11.1',
+                              '11.2', '11.3', '11.4', '12.1', NA))
+
+se_nt_data <- together %>% filter(together$Red.List.status == "NT")
+sentplot1 <- ggplot(data = se_nt_data, aes (x = code, fill = code)) +
+  geom_bar(stat = "count", position = "dodge", color="black", fill="olivedrab2") + 
+  xlab(label = "South & Southeast Asia Red List Threat Code: Near Threatened") + ylab(label = "Species Count") + 
+  #Removes the grid lines in the back: 
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  theme(legend.position="none") + 
+  scale_x_discrete(limits = c('1.1', '1.2', '1.3', '2.1', '2.2', '2.3', 
+                              '2.4', '3.2', '3.3', '4.1', '4.2', '5.1', 
+                              '5.2', '5.3', '5.4', '6.1', '6.2', '6.3', 
+                              '7.1', '7.2', '7.3', '8.1', '8.2', '8.4', 
+                              '9.1', '9.2', '9.3', '9.4', '10.1', '11.1',
+                              '11.2', '11.3', '11.4', '12.1', NA))
+
+se_lc_data <- together %>% filter(together$Red.List.status == "LC")
+selcplot1 <- ggplot(data = se_lc_data, aes (x = code, fill = code)) +
+  geom_bar(stat = "count", position = "dodge", color="black", fill="green3") + 
+  xlab(label = "South & Southeast Red List Threat Code: Least Concern") + ylab(label = "Species Count") + 
+  #Removes the grid lines in the back: 
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  theme(legend.position="none") + 
+  scale_x_discrete(limits = c('1.1', '1.2', '1.3', '2.1', '2.2', '2.3', 
+                              '2.4', '3.2', '3.3', '4.1', '4.2', '5.1', 
+                              '5.2', '5.3', '5.4', '6.1', '6.2', '6.3', 
+                              '7.1', '7.2', '7.3', '8.1', '8.2', '8.4', 
+                              '9.1', '9.2', '9.3', '9.4', '10.1', '11.1',
+                              '11.2', '11.3', '11.4', '12.1', NA))
