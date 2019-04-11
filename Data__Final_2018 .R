@@ -462,6 +462,8 @@ summary(lm38) #AIC = 834
 lm39 <-  glm(no_dd$threatened ~ no_dd$R1.2 + no_dd$A2.1.3 + no_dd$E3.2 + no_dd$B5.2 + no_dd$B5.1 + no_dd$H6.1 + no_dd$N7.2 + no_dd$N7.3, data = bio, family = binomial(link = "logit"))
 summary(lm39) #AIC = 832.3
 
+no_dd$R1.2<- as.factor(no_dd$R1.2)
+
 #Second Best One?
 lm40 <-  glm(no_dd$threatened ~ no_dd$R1.2 + no_dd$A2.1.3 + no_dd$E3.2 + no_dd$B5.2 + no_dd$B5.1 + no_dd$H6.1 + no_dd$N7.2 + no_dd$I8.1, data = bio, family = binomial(link = "logit"))
 summary(lm40) #AIC = 830.49 
@@ -506,8 +508,7 @@ summary(lm51)
 lm52 <-  glm(no_dd$threatened ~ no_dd$R1.2 + no_dd$A2.1.3 + no_dd$E3.2 + no_dd$B5.2 + no_dd$B5.1 + no_dd$H6.1 + no_dd$I8.1 + no_dd$P9.1 + no_dd$P9.2 + no_dd$G10.1, data = bio, family = binomial(link = "logit"))
 summary(lm52) #AIC = 827.69 
 
-#Best one? 
-lm53 <-  glm(no_dd$threatened ~ no_dd$A2.1.3 + no_dd$E3.2 + no_dd$B5.2 + no_dd$B5.1 + no_dd$H6.1 + no_dd$I8.1 + no_dd$P9.1 + no_dd$P9.2 + no_dd$C11.2, data = bio, family = binomial(link = "logit"))
+lm53 <-  glm(no_dd$threatened ~ no_dd$A2.1 + no_dd$E3.2 + no_dd$B5.2 + no_dd$B5.1 + no_dd$H6.1 + no_dd$I8.1 + no_dd$P9.1 + no_dd$P9.2 + no_dd$C11.2, data = bio, family = binomial(link = "logit"))
 summary(lm53) #AIC = 813.91,deleted R1.2 (NO LONGER SIG) .... 
               #with R1.2 and addign this new variable climate (drought)... AIC = 813.42 and R1.2 is no longer significant
               #Removing R1.2 and keeping that C11.2... AIC = 813.91 - not sure if I should keep or delete 
@@ -520,7 +521,37 @@ summary(lm55) #AIC = 813.91,deleted R1.2 (NO LONGER SIG) ....
 
 
 
+glm56 <-  glm(no_dd$threatened ~ no_dd$A2.1 + no_dd$E3.2 + no_dd$B5.1 + no_dd$H6.1 + no_dd$I8.1 + no_dd$P9.1 + no_dd$P9.2 + no_dd$C11.2, data = bio, family = binomial(link = "logit"))
+summary(glm56) 
 
+#####################
+#there are 665 rows 
+###Best one?!!
+glm57 <-  glm(no_dd$threatened ~ no_dd$A2.1 + no_dd$E3.2 + no_dd$B5.1 + no_dd$H6.1 + no_dd$I8.1 + no_dd$P9.1 + no_dd$C11.2, data = bio, family = binomial(link = "logit"))
+summary(glm57) #AIC = 820 
+
+class(no_dd$threatened)
+no_dd$A2.1 <- as.factor(no_dd$A2.1)
+no_dd$E3.2 <- as.factor(no_dd$E3.2)
+no_dd$H6.1 <- as.factor(no_dd$H6.1)
+no_dd$B5.1 <- as.factor(no_dd$B5.1)
+no_dd$I8.1 <- as.factor(no_dd$I8.1)
+no_dd$P9.1 <- as.factor(no_dd$P9.1)
+no_dd$C11.2 <- as.factor(no_dd$C11.2)
+
+glm57_factor <-  glm(no_dd$threatened ~ no_dd$A2.1 + no_dd$E3.2 + no_dd$B5.1 + no_dd$H6.1 + no_dd$I8.1 + no_dd$P9.1 + no_dd$C11.2, data = bio, family = binomial(link = "logit"))
+summary(glm57_factor) #AIC = 820 
+
+
+#######################
+
+
+
+threat_code()
+
+library(rredlist)
+
+rl_threats("Ingerophrynus biporcatus", key = token)
 #Contenders 
 #1 
 lm53 <-  glm(no_dd$threatened ~ no_dd$A2.1.3 + no_dd$E3.2 + no_dd$B5.2 + no_dd$B5.1 + no_dd$H6.1 + no_dd$I8.1 + no_dd$P9.1 + no_dd$P9.2 + no_dd$C11.2, data = no_dd, family = binomial(link = "logit"))
@@ -567,8 +598,43 @@ summary(a5) #AIC = 555.91
 a6 <- glm(amph_test$threatened ~ amph_test$Ter +amph_test$Body_size_mm  + no_dd$A2.1.3 + no_dd$H6.1 + no_dd$I8.1 + no_dd$P9.1 + no_dd$P9.2 + no_dd$C11.2, data = amph_test, family = binomial(link = "logit"))
 summary(a6) #AIC = 554.92
 
-a7 <- glm(amph_test$threatened ~ amph_test$Ter +amph_test$Body_size_mm  + no_dd$A2.1.3 + no_dd$H6.1 + no_dd$P9.1 + no_dd$P9.2 + no_dd$C11.2, data = amph_test, family = binomial(link = "logit"))
-summary(a7) #AIC = 555.77, this has body_Size_mm  (threats + body_size_mm + habitat)
+a7 <- glm(amph_test$threatened ~ amph_test$Ter +amph_test$Body_size_mm  + no_dd$A2.1 + no_dd$H6.1 + no_dd$P9.1 + no_dd$P9.2 + no_dd$C11.2, data = amph_test, family = binomial(link = "logit"))
+summary(a7) #AIC = 555.76, this has body_Size_mm  (threats + body_size_mm + habitat)
+plot(a7)
+
+
+a8 <- glm(amph_test$threatened ~ amph_test$Ter +amph_test$Body_size_mm  + no_dd$A2.1.3 + no_dd$H6.1 + no_dd$P9.1 * no_dd$P9.2 + no_dd$C11.2, data = amph_test, family = binomial(link = "logit"))
+summary(a8) #AIC = 555.77, this has body_Size_mm  (threats + body_size_mm + habitat)
+plot(a7)
+
+
+a9 <- glm(amph_test$threatened ~ amph_test$Ter +amph_test$Body_size_mm  + no_dd$A2.1 + no_dd$H6.1 + no_dd$P9.1 + no_dd$C11.2, data = amph_test, family = binomial(link = "logit"))
+summary(a9) #AIC = 558.87
+
+
+a10 <- glm(amph_test$threatened ~ amph_test$Ter +amph_test$Body_size_mm + amph_test$Dir + amph_test$Lar + no_dd$A2.1 + no_dd$H6.1 + no_dd$P9.1 + no_dd$C11.2, data = amph_test, family = binomial(link = "logit"))
+summary(a10)
+
+
+a11 <- glm(amph_test$threatened ~ amph_test$Lar , data = amph_test, family = binomial(link = "logit"))
+summary(a11)
+
+a12 <- glm(amph_test$threatened ~ amph_test$Ter +amph_test$Body_size_mm + amph_test$Dir + no_dd$A2.1 + no_dd$H6.1 + no_dd$P9.1 + no_dd$C11.2, data = amph_test, family = binomial(link = "logit"))
+summary(a12)
+
+a13 <- glm(amph_test$threatened ~ amph_test$Body_size_mm + amph_test$Dir + no_dd$A2.1 + no_dd$H6.1 + no_dd$P9.1 + no_dd$C11.2, data = amph_test, family = binomial(link = "logit"))
+summary(a13)
+
+a14 <- glm(amph_test$threatened ~ amph_test$Body_size_mm + amph_test$Dir + no_dd$A2.1 + no_dd$H6.1 + no_dd$C11.2, data = amph_test, family = binomial(link = "logit"))
+summary(a14)
+
+a15 <- glm(amph_test$threatened ~ amph_test$Body_size_mm + amph_test$Dir + no_dd$A2.1 + no_dd$H6.1, data = amph_test, family = binomial(link = "logit"))
+summary(a15)
+
+a16 <- glm(amph_test$threatened ~ amph_test$Body_size_mm + amph_test$Dir + no_dd$A2.1 + no_dd$H6.1, data = amph_test, family = binomial(link = "logit"))
+summary(a16)
+amph_test$Dir <- as.factor(amph_test$Dir)
+
 
 getwd()
 write.csv(no_dd,"/Users/Alexandra_Gonzalez/Desktop/NO_DD.csv")
@@ -1047,7 +1113,7 @@ finaldata <- threat_tables(code_name)
 summary((finaldata$R1.1))
 
 
-
+write.csv(finaldata, "finaldata.csv")
 rl_threats("Amolops cucae", key = token)
 ############################################
 
@@ -1073,7 +1139,7 @@ ALLDATA  #COPY OF TOGETHER. IM GOING TO REMOVE DD FROM TOGETHER AND REDO ANALYSI
 
 count(ALLDATA$title)
 
-
+all_codes <- threat_code(ALLDATA)
 
 
 
@@ -1123,30 +1189,104 @@ log_redlist <- as.data.frame(count(logging_wood, Red.List.status))
 ag <- filter(finaldata, A2.1 == 1)
 summary(ag)
 final_num <- finaldata
+final_num$species_list <- NULL
 final_num <- apply(final_num, 2, as.numeric)
+final_num <- as.data.frame(final_num)
+
+
 threat_cor <- cor(final_num)
 final_num$I8.3 <- NULL
+final_num$T4.3 <- NULL
+final_num$T4.4 <- NULL
+final_num$E3.1 <- NULL
+final_num$P9.5 <- NULL 
+final_num$P9.6 <- NULL
+final_num$G10.2 <- NULL 
+final_num$G10.3 <- NULL
+final_num$I8.5 <- NULL
+final_num$I8.6 <- NULL
+final_num$species_list <- NULL
+
 
 plot(threat_cor)
 library(reshape2)
 melted_threats <- melt(threat_cor)
 head(melted_threats)
+
+
         #testing the signifcance of the correlation: (need to see if 
         #pearsons test is the best for this - is this data paired?)
 cor.test(final_num$C11.5, final_num$C11.1)
 cor.test(final_num$R1.1, final_num$R1.2)
+cor.test(final_num$P9.3, final_num$R1.1)
+cor.test(final_num$B5.3, final_num$R1.1)
+cor.test(final_num$A2.1, final_num$R1.1)
+cor.test(final_num$H6.1, final_num$R1.3)
+cor.test(final_num$B5.3, final_num$A2.1)
+cor.test(final_num$P9.3, final_num$B5.3)
+cor.test(final_num$H6.3, final_num$H6.1)
+cor.test(final_num$P9.4, final_num$H6.3)
+cor.test(final_num$C11.5, final_num$C11.1, method = "pearson")
+?cor.test
+
+final_num <- apply(final_num, 2, as.factor)
+#CORRESPONDANCE ANALYSIS FOR CATEGORICAL DATA
+library(ca)
+#https://www.statmethods.net/advstats/ca.html
+together2 <- filter(together, together$title == "Logging & wood harvesting"|
+                      together$title == "Housing & urban areas")
 
 
+mytable <- with(together, table(together$Red.List.status, together$title))
+prop.table(mytable, 1)
+prop.table(mytable, 2)
+
+fit <- ca(mytable)
+
+mytable <- as.data.frame(mytable)
+mytable2 <- filter(mytable, mytable$Freq != 0)
+mytable3 <- as.table(mytable2)
+
+yo <- filter(together, together$Red.List.status == "CR")
+mytable <- with(yo, table(yo$title, yo$Family))
+
+
+
+library(ca)
+mytable <- with(mydata, table(A,B)) # create a 2 way table
+prop.table(mytable, 1) # row percentages
+prop.table(mytable, 2) # column percentages
+fit <- ca(mytable)
+print(fit) # basic results 
+summary(fit) # extended results 
+plot(fit) # symmetric map
+plot(fit, mass = TRUE, contrib = "absolute", map =
+       "rowgreen", arrows = c(FALSE, TRUE)) # asymmetric map
+
+
+
+
+
+
+
+
+
+plot(oh)
 library(ggplot2)
-cardib3 <- ggplot(data = melted_threats, aes(x = Var1, y = Var2, fill = value)) + 
-  geom_tile(color = "white")+
+cardib3 <- ggplot(data = melted_threats, aes(x = Var1, y = Var2, fill = value)) + geom_tile(color = "white")+
   scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
                        midpoint = 0, limit = c(-1,1), space = "Lab", 
                        name="Pearson\nCorrelation") +
-  theme_minimal()+ 
-  theme(axis.text.x = element_text(angle = 60, vjust = 1, 
-                                   size = 9, hjust = 1))+
-  coord_fixed()
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, size = 9, hjust = 1)) +
+  xlab(label = "Red List Threat Code") + ylab(label = "Red List Threat Code") 
+  
+
+####THREAT COUNT 
+counting1 <- sp_threat_count(ALLDATA$species_name[1:50])
+
+
+
 #############################
 #MAKE GRAPHS SO ISH CAN POP OFF
 ############################
@@ -1163,7 +1303,7 @@ bodak1 <- ggplot(data = together, aes (x = code, fill = threatened)) +
             theme(axis.text.x = element_text(angle = 60, vjust = 1, size = 9, hjust = 1)) +
             guides(fill=guide_legend(title=NULL)) +
             scale_fill_manual(values = c("dark grey", "red")) + 
-            #Reorders the x acis to be in the correct order
+            #Reorders the x axis to be in the correct order
             scale_x_discrete(limits = c('1.1', '1.2', '1.3', '2.1', '2.2', '2.3', 
                                         '2.4', '3.2', '3.3', '4.1', '4.2', '5.1', 
                                         '5.2', '5.3', '5.4', '6.1', '6.2', '6.3', 
@@ -1174,6 +1314,8 @@ bodak1 <- ggplot(data = together, aes (x = code, fill = threatened)) +
 bodak1
 
 
+yg <- ALLDATA %>% group_by(title) %>% summarise(no_rows = length(title))
+yg <- as.data.frame(yg)
 
 bodak4 <- ggplot(data = together, aes( x = severity)) + geom_bar(stat = "count") +
   theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
@@ -1200,17 +1342,21 @@ bodak5
 bodak6 <- ggplot(data = together, aes( x = score, fill = threatened)) + geom_bar(stat = "count", position = "dodge") +
   theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
-  theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, size = 9, hjust = 1)) +
   guides(fill=guide_legend(title=NULL)) +
-  xlab(label = "Threat Score") + ylab(label = "Count") 
+  xlab(label = "Red List Threat Score") + ylab(label = "Count") +
+  scale_fill_manual(values = c("dark grey", "red"))  
+
 bodak6
 
 bodak7 <- ggplot(data = together, aes( x = Family, fill = threatened)) + geom_bar(stat = "count", position = "dodge") +
   theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
-  theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, size = 9, hjust = 1)) +
   guides(fill=guide_legend(title=NULL)) +
-  xlab(label = "Family") + ylab(label = "Count") 
+  xlab(label = "Family") + ylab(label = "Count") +
+  scale_fill_manual(values = c("dark grey", "red"))  
+  
 bodak7
 
 
@@ -1234,13 +1380,29 @@ bodak9
 
 
 #####
-KOD <- ggplot(data = together, aes( x = Red.List.status, fill = Red.List.status)) + geom_bar(stat = "count") + coord_polar() + facet_wrap(~Year.assessed)
+KOD <- ggplot(data = ALLDATA, aes( x = Red.List.status, fill = Red.List.status)) + geom_bar(stat = "count") +
+  coord_polar() + facet_wrap(~Year.assessed) + theme_minimal() +
+  xlab(label = "Red List Status") + ylab(label = "Species Count") + 
+  theme(legend.position = "NULL")
+
+
 theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
                    panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
   theme(axis.text.x = element_text(angle = 30, vjust = 1, size = 9, hjust = 1)) +
   guides(fill=guide_legend(title=NULL)) +
   xlab(label = "Threat Score") + ylab(label = "Count") 
 bodak5
+
+
+drake <- ggplot(data = ALLDATA, aes( x = Year.assessed, fill = Year.assessed)) +
+  xlab(label = "Year Assessed") + ylab(label = "Species Count") + 
+  geom_bar(stat = "count", width = 1) + coord_polar() + theme_minimal() + 
+  theme(legend.position = "NULL")
+summary(ALLDATA$Year.assessed)
+
+
+
+
 
 ggplot(data = together) + 
   geom_count(mapping = aes(x = score, y = timing, size = prop))
@@ -1297,6 +1459,29 @@ ran1
 
 ###^ graphs explaining the overview of the data 
 
+together
+se_cr_data <- together %>% filter(together$Red.List.status == "CR")
+secrplot1 <- ggplot(data = se_cr_data, aes (x = code, fill = code)) +
+  geom_bar(stat = "count", position = "dodge", color="black", fill="red3") + 
+  xlab(label = "South & Southeast Asia Red List Threat Code:Critically Endangered") + ylab(label = "Species Count") + 
+  #Removes the grid lines in the back: 
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, size = 9, hjust = 1)) +
+  guides(fill=guide_legend(title=NULL)) +
+  theme(legend.position="none") + 
+  scale_x_discrete(limits = c('1.1', '1.2', '1.3', '2.1', '2.2', '2.3', 
+                              '2.4', '3.2', '3.3', '4.1', '4.2', '5.1', 
+                              '5.2', '5.3', '5.4', '6.1', '6.2', '6.3', 
+                              '7.1', '7.2', '7.3', '8.1', '8.2', '8.4', 
+                              '9.1', '9.2', '9.3', '9.4', '10.1', '11.1',
+                              '11.2', '11.3', '11.4', '12.1', NA))
+
+
+
+
+
+
 
 
 
@@ -1345,5 +1530,97 @@ high_threats <- filter(low_threats, low_threats$n >= 10)
 
       #the p value is less than 0.05, therefore we can reject the null hypothesis 
       #and accept the alternate hypothesis. 
+
+
+
+
+
+####################
+##SE ASIA THREAT COUNT (DENSITY DITRIBUTION, ANOVA, BOXPLOT)
+####################
+
+sp_threat_count <- function(threat_details_output){
+  ### data is a dataframe with the species_list  
+  ### as one column and the threat_code as the
+  ### other aims to work directly with sp_threats 
+  ###and threat_tables 
+  species_list <- names(table(threat_details_output$species_name)) 
+  threat_count <- vector(mode = "character", length = length(species_list))
+  i <- 1
+  library(dplyr)
+  for (species in species_list){
+    subset_species <- filter(threat_details_output, threat_details_output$species_name == species)
+    count <- length(subset_species$code)
+    threat_count[i] <- count
+    i <- 1 + i 
+  }
+  threatdf <- data.frame(species_list, threat_count)
+  return(threatdf)
+}
+
+
+counting <- threat_count(details)
+
+nrow(se_asian_amph)
+nrow(counting)
+
+counting$Red_list_status <- se_asian_amph$Red.List.status
+counting$Red_list_status <- as.factor(counting$Red_list_status)
+
+head(counting)
+head(se_asian_amph)
+
+#SE ASIA BOXPLOT 
+together$Red.List.status <- factor(together$Red.List.status, levels = c("LC", "NT", "VU", "EN", "CR"))
+counting$Red_list_status <- factor(counting$Red_list_status, levels = c("LC", "NT", "VU", "EN", "CR"))
+g <- ggplot(data = counting, aes(x = Red_list_status, y = threat_count, fill = Red_list_status)) + geom_boxplot() +
+  labs(title = NULL) +
+  scale_x_discrete(limits = c("LC", "NT", "VU", "EN", "CR")) +
+  scale_fill_manual(values = c("green3", "olivedrab2", "yellow","orangered", "red3"), 
+                    labels = c("Least Concern", "Near Threatened", "Vulnerable", 
+                               "Endangered", "Critically Endangered"),
+                    name = NULL) + 
+  xlab("South & Southeast Red List Cateogry") + ylab("Number of Threats") +
+  theme_minimal() 
+
+
+
+
+
+
+
+
+counting$threat_count <- as.numeric(counting$threat_count)
+a <- aov(threat_count ~ Red_list_status, data = counting)
+tHSD <- TukeyHSD(a, ordered = FALSE, conf.level = 0.95)
+summary(a)
+
+########
+#counting <- (!is.na(counting$Red_list_status))
+#counting$Red_list_status <- counting %>% filter(counting$Red_list_status != "DD" | counting$Red_list_status != "EX")
+
+h <- ggplot(counting, aes(x = threat_count, colour = Red_list_status)) + geom_density(size = 0.75) +
+  scale_x_continuous(name = "Number of Threats") + 
+  scale_y_continuous(name = "Density") + 
+  scale_color_manual(values = c("green3", "olivedrab2", "yellow","orangered", "red3"), 
+                     name = c(""), 
+                     labels = c("Least Concern", "Near Threatened", "Vulnerable", 
+                                "Endangered", "Critically Endangered"))
+
+counting$threat_count <- as.numeric(counting$threat_count)
+counting2 <- counting %>% filter(counting$Red_list_status != "DD")
+counting3 <- counting2 %>% filter(counting2$Red_list_status != "EX")
+
+counting3$Red_list_status <- factor(counting3$Red_list_status, levels = c("LC", "NT", "VU", "EN", "CR"))
+
+se_dens <- ggplot(counting3, aes(x = threat_count, colour = Red_list_status)) + geom_density(size = 0.75) +
+  scale_x_continuous(name = "South & Southeast Asia Number of Threat Processes") + 
+  scale_y_continuous(name = "Density") + 
+  scale_color_manual(values = c("green3", "olivedrab2", "yellow","orangered", "red3"), 
+                     name = c(""), 
+                     labels = c("Least Concern", "Near Threatened", "Vulnerable", 
+                                "Endangered", "Critically Endangered")) + 
+  theme_minimal() 
+
 
 
