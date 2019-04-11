@@ -132,6 +132,8 @@ sp_threat_count <- function(species_list){
   df <- data.frame(species_list, threat_count, stringsAsFactors = FALSE)
   return(df)
 }
+
+hey <- sp_threat_count(full_se_data$new_species[1:2])
 sp_all_genus <- function(species_list){
   # returns species list and genus of each species 
   genus_list <- vector(length = length(species_list), mode = "character")
@@ -145,6 +147,7 @@ sp_all_genus <- function(species_list){
   spgenus <- data.frame(species_list, genus_list)
   return(spgenus)
 }
+hey <- sp_all_genus(iucn_data$new_species[1:2])
 sp_all_family <- function(species_list){
   #returns species list and family of each species 
   family_list <- vector(length = length(species_list), mode = "character")
@@ -1321,5 +1324,4 @@ c_cr <- ggplot(data = df_cr2, aes(x = names2, y = sum, fill = names2)) + geom_ba
 
 
 
-
-
+rl_habitats("Theloderma asperum", key = token)
