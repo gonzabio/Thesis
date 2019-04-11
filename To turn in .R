@@ -295,16 +295,45 @@ all_threat_count$threat_count <- as.numeric(all_threat_count$threat_count)
         #ALL AMPHIBIAINS BOX PLOT 
 all_threat_count2 <- all_threat_count
 library(ggplot2)
-all_threat_count2 <- subset(all_threat_count, all_threat_count$threat_count <= 6)
-all3 <- ggplot(data = all_threat_count, aes(x = Red_List_status, y = threat_count, fill = Red_List_status)) + geom_boxplot() +
+
+all4 <- ggplot(data = all_threat_count2, aes(x = Red_List_status, y = threat_count, fill = Red_List_status)) + geom_boxplot() +
   stat_summary(fun.y = mean, colour = "darkred", geom = "point") + 
   labs(title = NULL) +
+  geom_text(data = means, aes(label = threat_count)) +
   scale_fill_manual(values = c("green3", "olivedrab2", "yellow","orangered", "red3"), 
                     labels = c("Least Concern", "Near Threatened", "Vulnerable", 
                                "Endangered", "Critically Endangered"),
                     name = NULL) + 
-  xlab("Red List Cateogry") + ylab("Number of Threats") +
+
+    xlab("Red List Cateogry") + ylab("Number of Threats") +
   theme_minimal()
+
+
+# no: e <- aggregate(all_threat_count2[,2], list(all_threat_count2$Red_List_status), mean)
+means <- aggregate(threat_count ~ Red_List_status, all_threat_count2, mean)
+
+      #means of each group 
+lc <- subset(all_threat_count2, all_threat_count2$Red_List_status == "LC")
+lc_mean <- mean(lc$threat_count)
+
+nt <- subset(all_threat_count2, all_threat_count2$Red_List_status == "NT")
+nt_mean <- mean(nt$threat_count)
+
+vu <- subset(all_threat_count2, all_threat_count2$Red_List_status == "VU")
+vu_mean <- mean(vu$threat_count)
+
+en <- subset(all_threat_count2, all_threat_count2$Red_List_status == "EN")
+en_mean <- mean(en$threat_count)
+
+cr <- subset(all_threat_count2, all_threat_count2$Red_List_status == "CR")
+cr_mean <- mean(cr$threat_count)
+
+
+
+
+
+
+summary(all_threat_count2$Red_List_status)
 
 hist(all_threat_count$threat_count)
         #ANOVA OF THE NUMBER OF THREATS 
@@ -327,6 +356,7 @@ bptest(w_model)
 oneway.test(threat_count ~ Red_List_status, data = all_threat_count2)
 bartlett.test(threat_count ~ Red_List_status, data = all_threat_count2)
 
+leveneTest(threat_count ~ Red_List_status, data = all_threat_count2)
 one.way2 <- oneway(all_threat_count2$Red_List_status, y = all_threat_count2$threat_count, posthoc = 'games-howell')
 
 
@@ -340,6 +370,15 @@ yfit<-dnorm(xfit)
 lines(xfit, yfit)
 
 sd(all_threat_count$threat_count)
+
+
+e <- aggregate(all_threat_count2[,2], list(all_threat_count2$Red_List_status), mean)
+
+
+
+
+
+
 
           ####END ALL AMPHIBIANS (WORLDWIDE) EXPLORATORY DATA ANALYSIS 
 
@@ -481,14 +520,15 @@ se_dens <- ggplot(counting3, aes(x = threat_count, colour = Red_list_status)) + 
 library("pgirmess")
 oneway.test(threat_count ~ Red_list_status, data = counting3)
 bartlett.test(threat_count ~ Red_list_status, data = counting3)
-
-
+library(car)
+leveneTest(threat_count ~ Red_list_status, data = counting3)
+means2 <- aggregate(counting3$threat_count ~ counting3$Red_list_status, counting, mean)
 
 onewayanova <- aov(threat_count ~ Red_list_status, data = counting3)
 summary(onewayanova)
 
 TukeyHSD(onewayanova)
-
+summary(counting3$Red_list_status)
 
   #Games-Howell Post hoc test 
 library("userfriendlyscience")
@@ -510,6 +550,16 @@ model <- lm(threat_count ~ Red_list_status, data = counting3)
 plot(model$residuals)
 bptest(model) 
 plot(model)
+
+library(dplyr)
+
+library(plyr)
+
+summary(counting3$Red_list_status)
+
+d <- aggregate(counting3[,2], list(counting3$Red_list_status), mean)
+se_means <- aggregate(threat_count ~ Red_list_status, counting3, mean)
+
 
 
 #4 (ALL) World Amphibians Correlation Heat Map  
