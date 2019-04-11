@@ -1094,7 +1094,7 @@ mca3[,1] <- NULL
 m1 <- MCA(mca3)
 res.mca <- MCA(mca3, graph = FALSE)
 print(res.ma)
-
+threat_details()
 
 library("FactoMineR")
 library("factoextra")
@@ -1648,8 +1648,9 @@ iucn_threats5 <- sp_threats(combined_df$new_species[4001:5000])
 iucn_threats6 <- sp_threats(combined_df$new_species[5001:5847])
 iucn_threats7 <- sp_threats(combined_df$new_species[5848:5857])
 
-threat_code <- rbind(iucn_threats1, iucn_threats2, iucn_threats3, iucn_threats4,
+threat_code2 <- rbind(iucn_threats1, iucn_threats2, iucn_threats3, iucn_threats4,
                      iucn_threats5, iucn_threats6, iucn_threats7)
+
 
 threat_table <- function(species_list){
   R1.1 <- rep(c(0),  each = length(species_list)) 
@@ -2482,6 +2483,419 @@ set15 <- threat_details(full_se_data$species_list[901:931])
 threat_specifics <- rbind(set1,set2, set3, set4, set5, set6,
                           set7, set8, set9, set10, set11, set12, 
                           set13, set14, set15)
+
+
+
+
+no_third_level <- function(species_list){
+  R1.1 <- rep(c(0),  each = length(species_list)) 
+  R1.2 <- rep(c(0),  each = length(species_list))
+  R1.3 <- rep(c(0),  each = length(species_list))
+  
+  #Agriculture and Aquaculture 
+  A2.1 <- rep(c(0),  each = length(species_list))
+  A2.2 <- rep(c(0),  each = length(species_list))
+  A2.3 <- rep(c(0),  each = length(species_list))
+  A2.4 <- rep(c(0),  each = length(species_list))
+  #Energy Productoin and mining 
+  E3.1 <- rep(c(0),  each = length(species_list)) 
+  E3.2 <- rep(c(0),  each = length(species_list))
+  E3.3 <- rep(c(0),  each = length(species_list)) 
+  
+  #Transportation and service corridots 
+  T4.1 <- rep(c(0),  each = length(species_list))
+  T4.2 <- rep(c(0),  each = length(species_list))
+  T4.3 <- rep(c(0),  each = length(species_list))
+  T4.4 <- rep(c(0),  each = length(species_list))
+  
+  #Biological Resource use 
+  B5.1 <- rep(c(0),  each = length(species_list))
+  B5.2 <- rep(c(0),  each = length(species_list))
+
+  B5.3 <- rep(c(0),  each = length(species_list))
+
+  B5.4 <- rep(c(0),  each = length(species_list))
+  #Human intrustions and disturbance 
+  H6.1 <- rep(c(0),  each = length(species_list))  
+  H6.2 <- rep(c(0),  each = length(species_list))
+  H6.3 <- rep(c(0),  each = length(species_list))
+  
+  #Natural system modifications 
+  N7.1 <- rep(c(0),  each = length(species_list))
+
+  N7.2 <- rep(c(0),  each = length(species_list))
+  N7.3 <- rep(c(0),  each = length(species_list))
+  
+  #Invasive and other problematic species, genes and disease 
+  I8.1 <- rep(c(0),  each = length(species_list))
+
+  I8.2 <- rep(c(0),  each = length(species_list))
+  I8.3 <- rep(c(0),  each = length(species_list))
+  
+  I8.4 <- rep(c(0),  each = length(species_list))
+
+  I8.5 <- rep(c(0),  each = length(species_list))
+
+  I8.6 <- rep(c(0),  each = length(species_list))
+  
+  #Pollution 
+  P9.1 <- rep(c(0),  each = length(species_list))
+
+  P9.2 <- rep(c(0),  each = length(species_list))
+  P9.3 <- rep(c(0),  each = length(species_list))
+
+  P9.4 <- rep(c(0),  each = length(species_list))
+  
+  P9.5 <- rep(c(0),  each = length(species_list))
+
+  P9.6 <- rep(c(0),  each = length(species_list))
+  
+  #Geological Events 
+  G10.1 <- rep(c(0),  each = length(species_list))
+  G10.2 <- rep(c(0),  each = length(species_list))
+  G10.3 <- rep(c(0),  each = length(species_list))
+  
+  #Climate Change and severe weather 
+  C11.1 <- rep(c(0),  each = length(species_list))
+  C11.2 <- rep(c(0),  each = length(species_list))
+  C11.3 <- rep(c(0),  each = length(species_list))
+  C11.4 <- rep(c(0),  each = length(species_list))
+  C11.5 <- rep(c(0),  each = length(species_list))
+  
+  #Other options 
+  O12.1 <- rep(c(0),  each = length(species_list))
+  
+  threat_df <- data.frame(species_list, R1.1, R1.2, R1.3, A2.1, A2.2, A2.3, A2.4, E3.1, E3.2,
+                          E3.3, T4.1, T4.2, T4.3, T4.4, B5.1, B5.2,B5.3, B5.4,
+                          H6.1, H6.2, H6.3, N7.1,N7.2,N7.3, I8.1,I8.2,I8.3, I8.4, I8.5,I8.6, P9.1,
+                          P9.2, P9.3,P9.4,P9.5, P9.6, G10.1, G10.2, G10.3, C11.1, C11.2, C11.3, C11.4, C11.5)
+  return(threat_df)
+} #Empty table of threats 
+
+ty <- pop_threat_tables2(hey)
+threat_tables <- function(data){
+  ### data is a dataframe with the species_list  
+  ### as one column and the threat_code as the
+  ### other aims to work directly with sp_threats 
+  ###and threat_tables 
+  threatdf <- no_third_level(data$species_list)
+  i <- 1
+  for (strings in data$threat_code){
+    many_strings <- strsplit(strings, split = " ")
+    for (elem in many_strings){
+      for(code in elem){
+        #### Residential 
+        if (code == "1.1"){
+          threatdf$R1.1[i] <- 1
+        } else if (code == "1.2"){
+          threatdf$R1.2[i] <- 1
+        } else if (code == "1.3"){
+          threatdf$R1.3[i] <- 1
+          #### Agriculture 
+        } else if (code == "2.1"){
+          threatdf$A2.1[i] <- 1
+        } else if (code == "2.1.1"){
+          threatdf$A2.1.1[i] <- 1
+        } else if (code == "2.1.2"){
+          threatdf$A2.1.2[i] <- 1
+        } else if (code == "2.1.3"){
+          threatdf$A2.1.3[i] <- 1
+        } else if (code == "2.1.4"){
+          threatdf$A2.1.4[i] <- 1
+          
+        } else if (code == "2.2"){
+          threatdf$A2.2[i] <- 1
+        } else if (code == "2.2.1"){
+          threatdf$A2.2.1[i] <- 1
+        } else if (code == "2.2.2"){
+          threatdf$A2.2.2[i] <- 1
+        } else if (code == "2.2.3"){
+          threatdf$A2.2.3[i] <- 1
+          
+        } else if (code == "2.3"){
+          threatdf$A2.3[i] <- 1
+        } else if (code == "2.3.1"){
+          threatdf$A2.3.1[i] <- 1
+        } else if (code == "2.3.2"){
+          threatdf$A2.3.2[i] <- 1
+        } else if (code == "2.3.3"){
+          threatdf$A2.3.3[i] <- 1
+        } else if (code == "2.3.4"){
+          threatdf$A2.3.4[i] <- 1
+          
+        } else if (code == "2.4"){
+          threatdf$A2.4[i] <- 1
+        } else if (code == "2.4.1"){
+          threatdf$A2.4.1[i] <- 1
+        } else if (code == "2.4.2"){
+          threatdf$A2.4.2[i] <- 1
+        } else if (code == "2.4.3"){
+          threatdf$A2.4.3[i] <- 1
+          #### Energy 
+        } else if (code == "3.1"){
+          threatdf$E3.1[i] <- 1
+        } else if (code == "3.2"){
+          threatdf$E3.2[i] <- 1
+        } else if (code == "3.3"){
+          threatdf$E3.3[i] <- 1
+          
+          #### Transportation and service corridors 
+        } else if (code == "4.1"){
+          threatdf$T4.1[i] <- 1
+        } else if (code == "4.2"){
+          threatdf$T4.2[i] <- 1
+        } else if (code == "4.3"){
+          threatdf$T4.3[i] <- 1
+        } else if (code == "4.4"){
+          threatdf$T4.4[i] <- 1
+          #### Biological resource use 
+        } else if (code == "5.1"){
+          threatdf$B5.1[i] <- 1
+        } else if (code == "5.1.1"){
+          threatdf$B5.1.1[i] <- 1
+        } else if (code == "5.1.2"){
+          threatdf$B5.1.2[i] <- 1
+        } else if (code == "5.1.3"){
+          threatdf$B5.1.3[i] <- 1
+        } else if (code == "5.1.4"){
+          threatdf$B5.1.4[i] <- 1
+          
+        } else if (code == "5.2"){
+          threatdf$B5.2[i] <- 1
+        } else if (code == "5.2.1"){
+          threatdf$B5.2.1[i] <- 1
+        } else if (code == "5.2.2"){
+          threatdf$B5.2.2[i] <- 1
+        } else if (code == "5.2.3"){
+          threatdf$B5.2.3[i] <- 1
+        } else if (code == "5.2.4"){
+          threatdf$B5.2.4[i] <- 1
+          
+        } else if (code == "5.3"){
+          threatdf$B5.3[i] <- 1
+        } else if (code == "5.3.1"){
+          threatdf$B5.3.1[i] <- 1
+        } else if (code == "5.3.2"){
+          threatdf$B5.3.2[i] <- 1
+        } else if (code == "5.3.3"){
+          threatdf$B5.3.3[i] <- 1
+        } else if (code == "5.3.4"){
+          threatdf$B5.3.4[i] <- 1
+        } else if (code == "5.3.5"){
+          threatdf$B5.3.5[i] <- 1
+          
+        } else if (code == "5.4"){
+          threatdf$B5.4[i] <- 1
+        } else if (code == "5.4.1"){
+          threatdf$B5.4.1[i] <- 1
+        } else if (code == "5.4.2"){
+          threatdf$B5.4.2[i] <- 1
+        } else if (code == "5.4.3"){
+          threatdf$B5.4.3[i] <- 1
+        } else if (code == "5.4.4"){
+          threatdf$B5.4.4[i] <- 1
+        } else if (code == "5.4.5"){
+          threatdf$B5.4.5[i] <- 1
+        } else if (code == "5.4.6"){
+          threatdf$B5.4.6[i] <- 1
+          
+          #### Human intrustions 
+        } else if (code == "6.1"){
+          threatdf$H6.1[i] <- 1
+        } else if (code == "6.2"){
+          threatdf$H6.2[i] <- 1
+        } else if (code == "6.3"){
+          threatdf$H6.3[i] <- 1
+          
+          #### Natural system modifications 
+        } else if (code == "7.1"){
+          threatdf$N7.1[i] <- 1
+        } else if (code == "7.1.1"){
+          threatdf$N7.1.1[i] <- 1
+        } else if (code == "7.1.2"){
+          threatdf$N7.1.2[i] <- 1
+        } else if (code == "7.1.3"){
+          threatdf$N7.1.3[i] <- 1
+          
+        } else if (code == "7.2"){
+          threatdf$N7.2[i] <- 1
+        } else if (code == "7.2.1"){
+          threatdf$N7.2.1[i] <- 1
+        } else if (code == "7.2.2"){
+          threatdf$N7.2.2[i] <- 1
+        } else if (code == "7.2.3"){
+          threatdf$N7.2.3[i] <- 1
+        } else if (code == "7.2.4"){
+          threatdf$N7.2.4[i] <- 1
+        } else if (code == "7.2.5"){
+          threatdf$N7.2.5[i] <- 1
+        } else if (code == "7.2.6"){
+          threatdf$N7.2.6[i] <- 1
+        } else if (code == "7.2.7"){
+          threatdf$N7.2.7[i] <- 1
+        } else if (code == "7.2.8"){
+          threatdf$N7.2.8[i] <- 1
+        } else if (code == "7.2.9"){
+          threatdf$N7.2.9[i] <- 1
+        } else if (code == "7.2.10"){
+          threatdf$N7.2.10[i] <- 1
+        } else if (code == "7.2.11"){
+          threatdf$N7.2.11[i] <- 1
+          
+        } else if (code == "7.3"){
+          threatdf$N7.3[i] <- 1
+          
+          #### Invasive species/disease/introduced genes 
+        } else if (code == "8.1"){
+          threatdf$I8.1[i] <- 1
+        } else if (code == "8.1.1"){
+          threatdf$I8.1.1[i] <- 1
+        } else if (code == "8.1.2"){
+          threatdf$I8.1.2[i] <- 1
+          
+        } else if (code == "8.2"){
+          threatdf$I8.2[i] <- 1
+        } else if (code == "8.2.1"){
+          threatdf$I8.2.1[i] <- 1
+        } else if (code == "8.2.2"){
+          threatdf$I8.2.2[i] <- 1
+          
+          
+        } else if (code == "8.3"){
+          threatdf$I8.3[i] <- 1
+          
+        } else if (code == "8.4"){
+          threatdf$I8.4[i] <- 1
+        } else if (code == "8.4.1"){
+          threatdf$I8.4.1[i] <- 1
+        } else if (code == "8.4.2"){
+          threatdf$I8.4.2[i] <- 1
+          
+        } else if (code == "8.5"){
+          threatdf$I8.5[i] <- 1
+        } else if (code == "8.5.1"){
+          threatdf$I8.5.1[i] <- 1
+        } else if (code == "8.5.2"){
+          threatdf$I8.5.2[i] <- 1
+          
+        } else if (code == "8.6"){
+          threatdf$I8.6[i] <- 1
+          
+          #### Pollution
+        } else if (code == "9.1"){
+          threatdf$P9.1[i] <- 1
+        } else if (code == "9.1.1"){
+          threatdf$P9.1.1[i] <- 1
+        } else if (code == "9.1.2"){
+          threatdf$P9.1.2[i] <- 1
+        } else if (code == "9.1.3"){
+          threatdf$P9.1.3[i] <- 1
+          
+          
+        } else if (code == "9.2"){
+          threatdf$P9.2[i] <- 1
+        } else if (code == "9.2.1"){
+          threatdf$P9.2.1[i] <- 1
+        } else if (code == "9.2.2"){
+          threatdf$P9.2.2[i] <- 1
+        } else if (code == "9.2.3"){
+          threatdf$P9.2.3[i] <- 1
+          
+        } else if (code == "9.3"){
+          threatdf$P9.3[i] <- 1
+        } else if (code == "9.3.1"){
+          threatdf$P9.3.1[i] <- 1
+        } else if (code == "9.3.2"){
+          threatdf$P9.3.2[i] <- 1
+        } else if (code == "9.3.3"){
+          threatdf$P9.3.3[i] <- 1
+        } else if (code == "9.3.4"){
+          threatdf$P9.3.4[i] <- 1
+          
+        } else if (code == "9.4"){
+          threatdf$P9.4[i] <- 1
+          
+        } else if (code == "9.5"){
+          threatdf$P9.5[i] <- 1
+        } else if (code == "9.5.1"){
+          threatdf$P9.5.1[i] <- 1
+        } else if (code == "9.5.2"){
+          threatdf$P9.5.2[i] <- 1
+        } else if (code == "9.5.3"){
+          threatdf$P9.5.3[i] <- 1
+        } else if (code == "9.5.4"){
+          threatdf$P9.5.4[i] <- 1
+          
+        } else if (code == "9.6"){
+          threatdf$P9.6[i] <- 1
+        } else if (code == "9.6.1"){
+          threatdf$P9.6.1[i] <- 1
+        } else if (code == "9.6.2"){
+          threatdf$P9.6.2[i] <- 1
+        } else if (code == "9.6.3"){
+          threatdf$P9.6.3[i] <- 1
+        } else if (code == "9.6.4"){
+          threatdf$P9.6.4[i] <- 1
+          
+          #### Geological Events
+        } else if (code == "10.1"){
+          threatdf$G10.1[i] <- 1
+        } else if (code == "10.2"){
+          threatdf$G10.2[i] <- 1
+        } else if (code == "10.3"){
+          threatdf$G10.3[i] <- 1
+          
+          #### Climate Change
+        } else if (code == "11.1"){
+          threatdf$C11.1[i] <- 1
+        } else if (code == "11.2"){
+          threatdf$C11.2[i] <- 1
+        } else if (code == "11.3"){
+          threatdf$C11.3[i] <- 1
+        } else if (code == "11.4"){
+          threatdf$C11.4[i] <- 1
+        } else if (code == "11.5"){
+          threatdf$C11.5[i] <- 1
+        }
+      }
+    }
+    i <- 1 + i 
+  }
+  return(threatdf)
+} #takes DF from sp_threats and populates empty threat table
+
+set1
+
+
+
+
+
+
+threat_code <- function(threat_details_output){
+  ### data is a dataframe with the species_list  
+  ### as one column and the threat_code as the
+  ### other aims to work directly with sp_threats 
+  ###and threat_tables 
+  species_list <- names(table(threat_details_output$species_name)) 
+  threat_code <- vector(mode = "character", length = length(species_list))
+  i <- 1
+  library(dplyr)
+  for (species in species_list){
+    subset_species <- filter(threat_details_output, species_name == species)
+    code <- names(table(subset_species$code))
+    threat_code[i] <- paste(code, collapse = " ")
+    i <- i + 1 
+  }
+  threatdf <- data.frame(species_list, threat_code)
+  return(threatdf)
+}
+
+
+hey <- concise_tables(set1)
+hey2 <- no_third_level(hey)
+
+
+
 
 library(dplyr)
 library(sqldf)
