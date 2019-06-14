@@ -454,6 +454,94 @@ summary(st_amph8_intrC) #AIC: 564
 pR2(st_amph8_intrC)
 
 
-rl_threats("Theloderma asperum", key = token)
+st_amph9_intrC <- glm(formula = threatened ~ Order + 
+                        A2.1 + H6.1 + E3.2 + 
+                        Body_size_mm + B5.1 +  
+                        P9.1 + P9.2, family = binomial(link = "logit"), data = amph_thr_iucn)
+summary(st_amph9_intrC)  #when body size and hunting are together, body size is significant and hunting isnt
+pR2(st_amph9_intrC)
+
+
+st_amph10_intrC <- glm(formula = threatened ~ Order + 
+                        A2.1 + H6.1 + E3.2 +  B5.1 +  
+                        P9.1 + P9.2, family = binomial(link = "logit"), data = amph_thr_iucn)
+summary(st_amph10_intrC) #when body size is removed, hunting is significant 
+pR2(st_amph10_intrC)
+
+#body size might be significant along with ag (two important variables that have seperate effects and can see )
+st_amph11_intrC <- glm(formula = threatened ~ Order + 
+                        A2.1 + H6.1 + E3.2 + 
+                        Body_size_mm +   
+                        P9.1 + P9.2, family = binomial(link = "logit"), data = amph_thr_iucn)
+summary(st_amph11_intrC) 
+pR2(st_amph11_intrC)
+
+
+st_amph12_intrC <- glm(formula = threatened ~ Order + 
+                         A2.1 + H6.1 + 
+                         Body_size_mm +   
+                         P9.1 + P9.2, family = binomial(link = "logit"), data = amph_thr_iucn)
+summary(st_amph12_intrC) 
+pR2(st_amph12_intrC)
+
+## body size and bodysize:hunting 
+
+hunt_body <- glm(formula = threatened ~ Order + 
+                        A2.1 + H6.1 + E3.2 + 
+                        Body_size_mm + Body_size_mm:B5.1 + B5.1 +
+                        P9.1 + P9.2, family = binomial(link = "logit"), data = amph_thr_iucn)
+summary(hunt_body)  
+pR2(hunt_body)
+
+
+
+
+##########################################################################################
+######
+###### Work completed with Patricia on June 14, 2019 
+######
+######
+
+
+hunt_body2 <- glm(formula = threatened ~ Order + 
+                   A2.1 + H6.1 + 
+                   Body_size_mm + Body_size_mm:B5.1 + B5.1 +
+                   P9.1 + P9.2, family = binomial(link = "logit"), data = amph_thr_iucn)
+summary(hunt_body2)  #best one so far 
+pR2(hunt_body2)
+
+#Hold variable constant 
+# ORDER = ANURA (because there are so many - and i'm interested in that) 
+# make more sense as 0 or 1 - whether u have it or not 
+# makes more sense when they are inbalanced too (more men than women, set at men)
+
+summary(amph_thr_iucn$A2.1) #Annual and perennial non-timber crops 
+    #Set at 1 (more 1s than 0)
+summary(amph_thr_iucn$H6.1) #Recreational activities 
+    #Set as 0 (mean is 0.0325)
+summary(amph_thr_iucn$B5.1) #Hunting and trapping 
+    ## TRY VARYING 
+    #Set as 0, for the other vary (make it the colored variable in the graph -heart)
+summary(amph_thr_iucn$P9.1) #Pollution - domestic and urban waste water 
+    #set as 0, try varying
+summary(amph_thr_iucn$P9.2) #Pollution - indsutrial and military effluents 
+    #set as 0 
+#ORDER = ANURA 
+# Try varying hunting and trapping FIRST, then try different pollutions (P's), then try H6.1,
+      #try Agriculture after 
+# Try all of them 
+
+#Hold body_size and hunting at average (the interaction at average) 
+    #body size average for a hunted region
+    #mean(body size * threat of hunting)
+
+
+    
+
+
+
+
+
+
 
 
