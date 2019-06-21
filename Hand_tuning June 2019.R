@@ -1,6 +1,5 @@
 ######################
 #Trying to find a better McFadden = 0.435 
-#See Southeast Asia Data2.R script as well 
 ######################
 
 
@@ -311,10 +310,18 @@ pR2(combo3) #McFaden = 0.527, Removed E3.2, I8.1
 ###############             ##############
 ############### Best Model  ##############
 ###############             ##############
+library(dplyr)
+library(sqldf)
+library(rredlist)
+library(corrplot)
+library(psych)
+library(caret)
+library(MASS)
+library(pscl) 
+
 combo4 <- glm(amph_thr_iucn$threatened ~ Order + Lar +
                 Body_size_mm + A2.1 + H6.1 + 
-                P9.1 + P9.2 +
-                C11.2, family = binomial(link = "logit"), data = amph_thr_iucn) 
+                P9.1 + P9.2 + C11.2, family = binomial(link = "logit"), data = amph_thr_iucn) 
 summary(combo4) 
 pR2(combo4) #McFaden = 0.53, Removed E3.2, I8.1, B5.1
 
@@ -334,22 +341,13 @@ pR2(combo4) #McFaden = 0.53, Removed E3.2, I8.1, B5.1
     summary(amph_thr_iucn$P9.2) #Pollution - indsutrial and military effluents 
     #set as 0 
     #ORDER = ANURA 
-    # Try varying hunting and trapping FIRST, then try different pollutions (P's), 
-        #then try H6.1,
     #try Agriculture after 
     # Try all of them 
-    
- #new:    
+    summary(amph_thr_iucn$C11.2)
+    #mean = 0.032, hold at 0 
     summary(amph_thr_iucn$Lar) #Larval - type of breeding strategy 
     #Mean at 0.8302, hold at 1 
 
-
-  #from previous model, not using this:     
-    summary(amph_thr_iucn$B5.1) #Hunting and trapping 
-    ## TRY VARYING 
-    #Set as 0, for the other vary (make it the colored variable in the graph -heart)
-
-    
 #Consider combining the two pollutions P9.1, P9.2 (make it into one boolean variable, pollution or no)
 
     # Produce grid to predict for threatened or not threatened 
@@ -357,29 +355,77 @@ pR2(combo4) #McFaden = 0.53, Removed E3.2, I8.1, B5.1
           #are threatened by annual and perennial non-timber crops (A2.1),
           #are not threatened by recreational activities (H6.1), 
           #are not threatened by pollution through domestic waste water (P9.1),
-          #are not threatened by pollution through industrial and military effluents 
-    # so hold A2.1 == 1, , P9.1 == 0, P9.2 == 0, Lar == 1,
+          #are not threatened by pollution through industrial and military effluents (P9.2), 
+          #are not threatened by climate change (C11.2)
+    # so hold A2.1 == 1, , P9.1 == 0, P9.2 == 0, C11.2 = 0, Lar == 1, 
     #VARY H6.1                        
     frogdf <- with(amph_thr_iucn,
                    data.frame(Body_size_mm = rep(seq(from = 13, to = 591, length.out = 250), 2), 
-                        A2.1=1, P9.1=0, P9.2=0, Lar =1, 
+                        A2.1=1, P9.1=0, P9.2=0, Lar =1, C11.2 = 0, Order = "ANURA", 
                         H6.1 = factor(rep(0:1, each = 250)))) #making grid, 
                                                             #only vary is H6.1 (between)
+   frogdf$threatened <- predict(combo4,newdata = frogdf, type="response")
+    
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+######################
+#Vary H6.1 as a factor 
+amph_thr_iucn2 <- amph_thr_iucn
+amph_thr_iucn2$H6.1 <- as.factor(amph_thr_iucn2$H6.1)
+#amph_thr_iucn2$P9.1 <- as.factor(amph_thr_iucn2$P9.1)
+#amph_thr_iucn2$P9.2 <- as.factor(amph_thr_iucn2$P9.2)
+#amph_thr_iucn2$A2.1 <- as.factor(amph_thr_iucn2$A2.1)
+#amph_thr_iucn2$C11.2 <- as.factor(amph_thr_iucn2$C11.2)
+
+
+glm_factor <- glm(amph_thr_iucn2$threatened ~ Order + Lar +
+                   Body_size_mm + A2.1 + H6.1 + 
+                   P9.1 + P9.2 + C11.2, family = binomial(link = "logit"), data = amph_thr_iucn2) 
+   summary(glm_factor) 
+   pR2(glm_factor) #McFaden = 0.53, Changed H6.1 to be a factor 
+   
+
+frogdf_2 <- with(amph_thr_iucn2,
+                  data.frame(Body_size_mm = rep(seq(from = 13, to = 591, length.out = 250), 2), 
+                             A2.1=1, P9.1=0, P9.2=0, Lar =1, C11.2 = 0, Order = "ANURA", 
+                             H6.1 = factor(rep(0:1, each = 250)))) #making grid, 
+
+   #only vary is H6.1 (between)
+frogdf_2$threatened <- predict(glm_factor,newdata = frogdf_2, type="response")
+   
+Predplot_H61_Factor <- ggplot(frogdf_2, aes(x = Body_size_mm, y = threatened))  +
+  geom_line(aes(colour = H6.1), size=1)+
+  ggtitle(labs(title = "Body size in Frogs (Varying H6.1)"))+
+  theme(text = element_text(size=17))+ theme(plot.title = element_text(hjust = 0.5))+
+  labs(x="Body size mm", y="Probability of threatened or not threatened")+
+  scale_fill_manual( values = c("green","blue","purple","red"))
+Predplot_H61_Factor
+
+
+#Vary P9.1   
+amph_thr_iucn2 <- amph_thr_iucn
+amph_thr_iucn2$P9.1 <- as.factor(amph_thr_iucn2$P9.1)
+
+glm_factor_P91 <- glm(amph_thr_iucn2$threatened ~ Order + Lar +
+                    Body_size_mm + A2.1 + H6.1 + 
+                    P9.1 + P9.2 + C11.2, family = binomial(link = "logit"), data = amph_thr_iucn2) 
+summary(glm_factor_P91) 
+pR2(glm_factor_P91) #McFaden = 0.53, Changed P9.1 to be a factor 
+
+frogdf_P91 <- with(amph_thr_iucn2,
+                 data.frame(Body_size_mm = rep(seq(from = 13, to = 591, length.out = 250), 2), 
+                            A2.1=1, H6.1=0, P9.2=0, Lar =1, C11.2 = 0, Order = "ANURA", 
+                            P9.1 = factor(rep(0:1, each = 250)))) #making grid, 
+
+frogdf_P91$threatened <- predict(glm_factor_P91, newdata = frogdf_P91, type="response")
+
+
+Predplot_P91_Factor <- ggplot(frogdf_P91, aes(x = Body_size_mm, y = threatened))  +
+  geom_line(aes(colour = P9.1), size=1)+
+  ggtitle(labs(title = "Body size in Frogs (Varying P9.1 - Domestic and Urban Waste Water)"))+
+  theme(text = element_text(size=17))+ theme(plot.title = element_text(hjust = 0.5))+
+  labs(x="Body size mm", y="Probability of threatened or not threatened")+
+  scale_fill_manual( values = c("green","blue","purple","red"))
+Predplot_P91_Factor
+
     
 
